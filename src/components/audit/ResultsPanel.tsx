@@ -26,6 +26,8 @@ export type ResultsData = {
   challenges: number[];
   openAnswer: string;
   moduleStats: ModuleStat[];
+  submissionId?: string;
+  initialAiText?: string | null;
 };
 
 function buildQuestionnaireCopy(d: ResultsData) {
