@@ -282,9 +282,9 @@ export const MODULES: Module[] = [
     title: "Marketing- & Vertriebsplanung",
     questions: [
       { id: "9.1", title: "Ziele", text: "Wir haben smarte, messbare Umsatz- und Kundengewinnungsziele schriftlich fixiert." },
-      { id: "9.2", title: "Maßnahmen", text: "Unsere täglichen Marketing-Aktionen leiten sich logisch aus unseren Jahreszielen ab." },
+      { id: "9.2", title: "Maßnahmen", text: "Unsere Marketing- und Vertriebsaktivitäten leiten sich logisch aus unseren Unternehmenszielen ab." },
       { id: "9.3", title: "Prioritäten", text: "Ich weiß an jedem Arbeitstag ganz genau, welche Vertriebsaufgabe die höchste Priorität hat." },
-      { id: "9.4", title: "Budget", text: "Wir haben ein klares Werbe- und Marketingbudget, das wir monatlich überwachen." },
+      { id: "9.4", title: "Budget", text: "Wir planen und überwachen die Ressourcen, die wir für Marketing und Vertrieb einsetzen." },
       { id: "9.5", title: "Zeitplanung", text: "Unsere Kampagnen und Launches sind zeitlich präzise im Voraus geplant." },
       { id: "9.6", title: "90-Tage-Plan", text: "Wir steuern das Unternehmen nach einem agilen und fokussierten 90-Tage-Plan." },
       { id: "9.7", title: "Fokus", text: "Wir verfolgen konsequent wenige Prioritäten statt viele parallele Marketingmaßnahmen.", isNew: true },
