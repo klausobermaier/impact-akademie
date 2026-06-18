@@ -90,7 +90,7 @@ export function useAuditState() {
         const redCount = numeric.filter((v) => v <= 1).length;
         const avg =
           numeric.length > 0
-            ? Number((numeric.reduce((a, b) => a + b, 0) / numeric.length).toFixed(1))
+            ? Number(((numeric as number[]).reduce((a, b) => a + b, 0) / numeric.length).toFixed(1))
             : null;
         const total = mod.questions.length;
         const redPct = numeric.length > 0 ? Math.round((redCount / numeric.length) * 100) : 0;
