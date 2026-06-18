@@ -3,6 +3,14 @@ export type Question = {
   title: string;
   text: string;
   isNew?: boolean;
+  /** Optional per-question scale labels (length 5, for values 0..4). Falls back to SCALE_LABELS. */
+  scaleLabels?: string[];
+  /** Optional per-question label for the N/A button. Falls back to "N/A". */
+  naLabel?: string;
+  /** Render mode for the answer input. Default: "scale". */
+  kind?: "scale" | "number";
+  /** For numeric questions: placeholder in the textual question (replaces "X"). */
+  numberUnit?: string;
 };
 
 export type Module = {
@@ -28,6 +36,15 @@ export const SCALE_VALS: Array<0 | 1 | 2 | 3 | 4 | "na"> = [0, 1, 2, 3, 4, "na"]
 
 export type AnswerValue = 0 | 1 | 2 | 3 | 4 | "na";
 
+/** Map a numeric input (e.g. number of customer interviews) to a 0–4 score. */
+export function numberToScore(n: number): 0 | 1 | 2 | 3 | 4 {
+  if (n <= 0) return 0;
+  if (n <= 3) return 1;
+  if (n <= 6) return 2;
+  if (n <= 9) return 3;
+  return 4;
+}
+
 export const MODULES: Module[] = [
   {
     id: 0,
@@ -37,13 +54,92 @@ export const MODULES: Module[] = [
       "Bevor Marketing und Vertrieb aufgebaut werden: Ist das Problem relevant und besteht ausreichend Nachfrage?",
     isNew: true,
     questions: [
-      { id: "0.1", title: "Kundeninterviews", text: "Ich habe mit mindestens 10 potenziellen Kunden über deren Herausforderungen gesprochen." },
-      { id: "0.2", title: "Problemvalidierung", text: "Ich habe überprüft, ob das Problem meiner Zielgruppe tatsächlich relevant und dringend ist." },
-      { id: "0.3", title: "Angebotsvalidierung", text: "Ich habe mein Angebot bereits echten Interessenten vorgestellt und Feedback erhalten." },
-      { id: "0.4", title: "Anpassungen", text: "Ich habe mein Angebot aufgrund von Kundenfeedback bereits verändert oder verbessert." },
-      { id: "0.5", title: "Erste Umsätze", text: "Ich habe bereits mindestens einen zahlenden Kunden gewonnen." },
-      { id: "0.6", title: "Nachfragebeleg", text: "Ich kann anhand von Gesprächen, Anfragen oder Verkäufen belegen, dass Nachfrage besteht." },
-      { id: "0.7", title: "Einwände", text: "Ich kenne die häufigsten Gründe, warum Kunden nicht kaufen." },
+      {
+        id: "0.1",
+        title: "Kundeninterviews",
+        text: "Ich habe bisher mit X potenziellen Kunden über deren Herausforderungen gesprochen.",
+        kind: "number",
+        numberUnit: "Kunden",
+        naLabel: "Nicht relevant",
+      },
+      {
+        id: "0.2",
+        title: "Problemvalidierung",
+        text: "Ich habe überprüft, ob das Problem meiner Zielgruppe tatsächlich relevant und dringend ist.",
+        scaleLabels: [
+          "Ich habe nicht überprüft, ob das Problem meiner Zielgruppe tatsächlich besteht",
+          "Ich habe erste Annahmen über das Problem mit potenziellen Kunden besprochen",
+          "Mehrere potenzielle Kunden haben das Problem bestätigt",
+          "Das Problem wurde von zahlreichen potenziellen Kunden als relevant und dringend bestätigt",
+          "Ich kann belegen, dass das Problem für die Zielgruppe so relevant ist, dass aktiv nach Lösungen gesucht wird",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
+      {
+        id: "0.3",
+        title: "Angebotsvalidierung",
+        text: "Ich habe mein Angebot bereits echten Interessenten vorgestellt und Feedback erhalten.",
+        scaleLabels: [
+          "Mein Angebot wurde noch keinen potenziellen Kunden vorgestellt",
+          "Ich habe mein Angebot einzelnen Personen vorgestellt",
+          "Ich habe mehreren potenziellen Kunden mein Angebot vorgestellt und Feedback erhalten",
+          "Ich habe mein Angebot wiederholt vorgestellt und systematisch Feedback gesammelt",
+          "Das Kundenfeedback hat mein Angebot bestätigt und zu konkreten Verbesserungen geführt",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
+      {
+        id: "0.4",
+        title: "Anpassungen",
+        text: "Ich habe mein Angebot aufgrund von Kundenfeedback bereits verändert oder verbessert.",
+        scaleLabels: [
+          "Ich habe mein Angebot noch nicht auf Basis von Kundenfeedback angepasst",
+          "Ich habe erste Verbesserungsideen aus Kundenfeedback gesammelt",
+          "Ich habe einzelne Anpassungen an meinem Angebot vorgenommen",
+          "Ich passe mein Angebot regelmäßig auf Basis von Kundenfeedback an",
+          "Kundenfeedback ist ein fester Bestandteil meiner Angebotsentwicklung und führt kontinuierlich zu Verbesserungen",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
+      {
+        id: "0.5",
+        title: "Erste Umsätze",
+        text: "Ich habe bereits mindestens einen zahlenden Kunden gewonnen.",
+        scaleLabels: [
+          "Ich habe noch nicht überprüft, ob Kunden bereit sind, für die Lösung zu bezahlen",
+          "Ich habe mit Kunden über Preise gesprochen",
+          "Potenzielle Kunden haben grundsätzlich Kaufinteresse signalisiert",
+          "Kunden haben konkrete Kaufabsichten gezeigt (z. B. Angebot angefragt, Vorbestellung, Testkunde)",
+          "Kunden haben bereits für die Lösung bezahlt oder verbindlich zugesagt",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
+      {
+        id: "0.6",
+        title: "Nachfragebeleg",
+        text: "Ich kann anhand von Gesprächen, Anfragen oder Verkäufen belegen, dass Nachfrage besteht.",
+        scaleLabels: [
+          "Ich habe keine Hinweise darauf, dass Nachfrage nach meinem Angebot besteht",
+          "Einzelne Personen haben Interesse an meinem Angebot gezeigt",
+          "Es gab mehrere konkrete Anfragen oder Interessensbekundungen",
+          "Es entstehen regelmäßig Anfragen oder Gespräche mit potenziellen Kunden",
+          "Die Nachfrage ist durch wiederkehrende Anfragen, Testkunden oder Verkäufe klar nachgewiesen",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
+      {
+        id: "0.7",
+        title: "Einwände",
+        text: "Ich kenne die häufigsten Gründe, warum Kunden nicht kaufen.",
+        scaleLabels: [
+          "Ich kenne die Gründe nicht, warum Interessenten nicht kaufen",
+          "Ich habe einzelne Vermutungen zu typischen Einwänden",
+          "Ich habe wiederkehrende Einwände bei Interessenten erkannt",
+          "Ich dokumentiere typische Einwände und kann darauf gezielt reagieren",
+          "Ich kenne die häufigsten Einwände genau und habe wirksame Strategien entwickelt, um sie zu adressieren",
+        ],
+        naLabel: "Aktuell nicht relevant",
+      },
     ],
   },
   {

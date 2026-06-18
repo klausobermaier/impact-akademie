@@ -23,6 +23,7 @@ export function AuditPage() {
   const {
     state,
     setAnswer,
+    setNumericAnswer,
     toggleChallenge,
     updateField,
     reset,
@@ -214,7 +215,9 @@ export function AuditPage() {
             key={mod.id}
             module={mod}
             answers={state.answers}
+            numericInputs={state.numericInputs}
             onAnswer={setAnswer}
+            onNumericAnswer={setNumericAnswer}
           />
         ))}
 

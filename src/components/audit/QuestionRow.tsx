@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import { SCALE_LABELS, SCALE_VALS, type AnswerValue, type Question } from "./data";
 
 const SOFT_BG = [
@@ -26,13 +27,31 @@ const TEXT = [
 export function QuestionRow({
   question,
   value,
+  numericValue,
   onChange,
+  onNumericChange,
 }: {
   question: Question;
   value: AnswerValue | undefined;
+  numericValue?: number;
   onChange: (val: AnswerValue) => void;
+  onNumericChange?: (n: number | null) => void;
 }) {
   const answered = value !== undefined;
+  const isNumber = question.kind === "number";
+
+  // Render question text. For numeric questions, replace "X" with the number or "___".
+  const renderedText = isNumber
+    ? question.text.replace(
+        /\bX\b/,
+        numericValue !== undefined ? String(numericValue) : "___",
+      )
+    : question.text;
+
+  const labels = question.scaleLabels ?? SCALE_LABELS.slice(0, 5);
+  const naLabel = question.naLabel ?? "N/A";
+  const hasCustomLabels = !!question.scaleLabels;
+
   return (
     <div
       className={cn(
@@ -53,35 +72,86 @@ export function QuestionRow({
               </span>
             )}
           </div>
-          <div className="text-sm text-muted-foreground mt-0.5">{question.text}</div>
+          <div className="text-sm text-muted-foreground mt-0.5">{renderedText}</div>
         </div>
       </div>
-      <div className="flex gap-1.5 flex-wrap">
-        {SCALE_VALS.map((v, i) => {
-          const selected = value === v;
-          const isNa = v === "na";
-          return (
-            <button
-              key={String(v)}
-              type="button"
-              onClick={() => onChange(v)}
-              className={cn(
-                "flex-1 min-w-[52px] py-2 px-1 rounded-md border-[1.5px] text-sm font-semibold transition-colors text-center select-none",
-                "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary hover:bg-accent",
-                selected && !isNa && SOFT_BG[i],
-                selected && !isNa && BORDER[i],
-                selected && !isNa && TEXT[i],
-                selected && isNa && "bg-muted border-muted-foreground/40 text-foreground",
-              )}
-            >
-              <div>{isNa ? "N/A" : v}</div>
-              <div className="text-[10px] font-normal opacity-80 leading-tight">
-                {SCALE_LABELS[i]}
-              </div>
-            </button>
-          );
-        })}
-      </div>
+
+      {isNumber ? (
+        <div className="flex items-center gap-2 flex-wrap">
+          <Input
+            type="number"
+            min={0}
+            inputMode="numeric"
+            value={
+              value === "na"
+                ? ""
+                : numericValue !== undefined
+                  ? String(numericValue)
+                  : ""
+            }
+            placeholder="z. B. 10"
+            onChange={(e) => {
+              const raw = e.target.value;
+              if (raw === "") {
+                onNumericChange?.(null);
+                return;
+              }
+              const n = Math.max(0, Math.floor(Number(raw)));
+              if (Number.isFinite(n)) onNumericChange?.(n);
+            }}
+            className="w-32"
+          />
+          {question.numberUnit && (
+            <span className="text-sm text-muted-foreground">{question.numberUnit}</span>
+          )}
+          <button
+            type="button"
+            onClick={() => onChange("na")}
+            className={cn(
+              "ml-auto py-2 px-3 rounded-md border-[1.5px] text-sm font-semibold transition-colors",
+              "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary hover:bg-accent",
+              value === "na" && "bg-muted border-muted-foreground/40 text-foreground",
+            )}
+          >
+            {naLabel}
+          </button>
+        </div>
+      ) : (
+        <div className={cn("grid gap-1.5", hasCustomLabels ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-6" : "flex flex-wrap")}> 
+          {SCALE_VALS.map((v, i) => {
+            const selected = value === v;
+            const isNa = v === "na";
+            const label = isNa ? naLabel : labels[i];
+            return (
+              <button
+                key={String(v)}
+                type="button"
+                onClick={() => onChange(v)}
+                title={label}
+                className={cn(
+                  "py-2 px-2 rounded-md border-[1.5px] text-sm font-semibold transition-colors text-center select-none",
+                  !hasCustomLabels && "flex-1 min-w-[52px]",
+                  "border-border bg-background text-muted-foreground hover:border-primary hover:text-primary hover:bg-accent",
+                  selected && !isNa && SOFT_BG[i],
+                  selected && !isNa && BORDER[i],
+                  selected && !isNa && TEXT[i],
+                  selected && isNa && "bg-muted border-muted-foreground/40 text-foreground",
+                )}
+              >
+                <div>{isNa ? "N/A" : v}</div>
+                <div
+                  className={cn(
+                    "font-normal opacity-80 leading-tight mt-0.5",
+                    hasCustomLabels ? "text-[11px]" : "text-[10px]",
+                  )}
+                >
+                  {label}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
