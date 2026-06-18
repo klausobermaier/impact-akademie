@@ -66,7 +66,7 @@ export function AuditPage() {
     }));
 
     try {
-      await submitAudit({
+      const submitted = await submitAudit({
         name: state.name,
         company: state.company,
         industry: state.industry,
@@ -94,6 +94,7 @@ export function AuditPage() {
         challenges: state.challenges,
         openAnswer: state.openAnswer,
         moduleStats: compactStats,
+        submissionId: submitted?.id,
       });
 
       setTimeout(() => {

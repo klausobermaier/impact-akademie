@@ -35,6 +35,8 @@ export type SubmissionRow = {
   module_stats: SubmissionPayload["moduleStats"];
   answered_count: number;
   total_questions: number;
+  ai_evaluation: string | null;
+  ai_evaluation_generated_at: string | null;
 };
 
 export async function submitAudit(payload: SubmissionPayload) {
