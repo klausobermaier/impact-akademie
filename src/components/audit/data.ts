@@ -297,9 +297,9 @@ export const MODULES: Module[] = [
     questions: [
       { id: "10.1", title: "Strategische Partner", text: "Wir arbeiten mit festen Partnern zusammen, deren Angebot unseres perfekt ergänzt." },
       { id: "10.2", title: "Multiplikatoren", text: "Wir haben Kontakte zu Personen, die Zugang zu unserer gesamten Zielgruppe haben und uns empfehlen." },
-      { id: "10.3", title: "Branchenverbände", text: "Wir nutzen die Mitgliedschaft in Branchenverbänden aktiv für unsere Positionierung und Kontakte." },
+      { id: "10.3", title: "Branchenverbände", text: "Wir nutzen relevante Branchen- oder Fachnetzwerke aktiv für unsere Sichtbarkeit und Geschäftsentwicklung." },
       { id: "10.4", title: "Gründernetzwerke", text: "Wir sind in Startup-Hubs und Gründernetzwerken aktiv integriert." },
-      { id: "10.5", title: "Förderinstitutionen", text: "Wir stehen im Austausch mit Institutionen für Fördermittel oder Gründerstipendien." },
+      { id: "10.5", title: "Förderinstitutionen", text: "Wir kennen und nutzen relevante Förder- oder Unterstützungsangebote für unser Unternehmen." },
       { id: "10.6", title: "Kooperationen", text: "Wir führen gemeinsame Aktionen (z. B. Live-Events, Co-Marketing) mit anderen Unternehmen durch." },
       { id: "10.7", title: "Empfehlungsnetzwerke", text: "Wir sind Teil von festen Business-Netzwerken, die sich gegenseitig Aufträge zuspielen." },
       { id: "10.8", title: "Nutzen des Netzwerks", text: "Unsere Netzwerke und Partnerschaften führen regelmäßig zu Kontakten, Kunden oder Geschäftsmöglichkeiten.", isNew: true },
