@@ -112,7 +112,13 @@ function AdminListPage() {
           <h1 className="text-lg font-semibold">Audit-Einreichungen</h1>
           <p className="text-xs opacity-75">{email}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link
+            to="/admin/group"
+            className="text-xs underline opacity-90 hover:opacity-100 font-medium"
+          >
+            🧭 Workshop-Gesamtanalyse
+          </Link>
           <Link
             to="/audit"
             className="text-xs underline opacity-80 hover:opacity-100"
