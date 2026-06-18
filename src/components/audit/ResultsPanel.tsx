@@ -174,7 +174,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
   const generate = useServerFn(generateAuditEvaluation);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
-  const [aiText, setAiText] = useState<string | null>(null);
+  const [aiText, setAiText] = useState<string | null>(data.initialAiText ?? null);
 
   const runEvaluation = async () => {
     setAiLoading(true);
@@ -187,6 +187,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
       }));
       const res = await generate({
         data: {
+          submissionId: data.submissionId,
           name: data.name,
           company: data.company,
           stageLabel: data.stageLabel,
@@ -207,8 +208,12 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
     }
   };
 
-  // Auto-start evaluation when results appear
+  // Auto-start evaluation when results appear (but skip if we already have a cached one)
   useEffect(() => {
+    if (data.initialAiText) {
+      setAiText(data.initialAiText);
+      return;
+    }
     runEvaluation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
