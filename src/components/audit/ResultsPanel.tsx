@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { MODULES } from "./data";
-import type { AuditState } from "./useAuditState";
+import type { AnswerValue } from "./data";
 
-type ModuleStat = {
-  mod: (typeof MODULES)[number];
+export type ModuleStat = {
+  modId: number;
+  title: string;
   avg: number | null;
   redPct: number;
   naPct: number;
@@ -14,35 +15,41 @@ type ModuleStat = {
   total: number;
 };
 
-function buildExportText(
-  state: AuditState,
-  moduleStats: ModuleStat[],
-  meta: { name: string; company: string; stageLabel: string; today: string },
-) {
-  const { name, company, stageLabel, today } = meta;
+export type ResultsData = {
+  name: string;
+  company: string;
+  stageLabel: string;
+  dateLabel: string;
+  answers: Record<string, AnswerValue>;
+  challenges: number[];
+  openAnswer: string;
+  moduleStats: ModuleStat[];
+};
+
+function buildExportText(d: ResultsData) {
   let txt = `==================================================\nSTARTUP MARKETING AUDIT – ERGEBNISSE\n==================================================\n`;
-  txt += `Teilnehmer/in: ${name}\n`;
-  txt += `Unternehmen: ${company}\n`;
-  txt += `Gründungsphase: ${stageLabel}\n`;
-  txt += `Datum: ${today}\n\n`;
+  txt += `Teilnehmer/in: ${d.name}\n`;
+  txt += `Unternehmen: ${d.company}\n`;
+  txt += `Gründungsphase: ${d.stageLabel}\n`;
+  txt += `Datum: ${d.dateLabel}\n\n`;
   txt += `--------------------------------------------------\nMODUL-ÜBERSICHT (Kennzahlen für Trainer)\n--------------------------------------------------\n`;
   txt += `Format: Modul | Ø Wert | Anteil 0-1 (kritisch) | Anteil N/A\n\n`;
-  moduleStats.forEach((s) => {
-    txt += `[M${s.mod.id}] ${s.mod.title}\n`;
+  d.moduleStats.forEach((s) => {
+    txt += `[M${s.modId}] ${s.title}\n`;
     txt += `  Ø ${s.avg !== null ? s.avg : "n/a"} | 🔴 ${s.redPct}% kritisch | ⬜ ${s.naPct}% N/A\n`;
   });
   txt += `\n--------------------------------------------------\nEINZELNE ANTWORTEN\n--------------------------------------------------\n`;
   MODULES.forEach((mod) => {
     txt += `\n[Modul ${mod.id}: ${mod.title}]\n`;
     mod.questions.forEach((q) => {
-      const val = state.answers[q.id];
+      const val = d.answers[q.id];
       const display = val === undefined ? "–" : val === "na" ? "N/A" : val;
       txt += `  ${q.id} ${q.title}: ${display}\n`;
     });
   });
   txt += `\n--------------------------------------------------\nSELBSTEINSCHÄTZUNG – GRÖßTE HERAUSFORDERUNGEN\n--------------------------------------------------\n`;
-  if (state.challenges.length > 0) {
-    state.challenges.forEach((id, i) => {
+  if (d.challenges.length > 0) {
+    d.challenges.forEach((id, i) => {
       const m = MODULES.find((x) => x.id === id);
       txt += `  ${i + 1}. Modul ${id}: ${m?.title ?? ""}\n`;
     });
@@ -50,7 +57,7 @@ function buildExportText(
     txt += "  (keine Auswahl)\n";
   }
   txt += `\n--------------------------------------------------\nOFFENE FRAGE\n--------------------------------------------------\n`;
-  txt += state.openAnswer || "(keine Antwort)\n";
+  txt += d.openAnswer || "(keine Antwort)\n";
   txt += `\n\n==================================================\nANALYSE-ANFRAGE FÜR KI (bitte einschließen)\n==================================================\n`;
   txt += `Bitte analysiere diese Startup-Audit-Ergebnisse und erstelle:\n\n`;
   txt += `1. PRIORITÄTEN: Die drei kritischsten Module mit dem größten Handlungsbedarf (begründet durch Ø-Wert und Anteil kritischer Antworten)\n\n`;
@@ -61,29 +68,9 @@ function buildExportText(
   return txt;
 }
 
-export function ResultsPanel({
-  state,
-  moduleStats,
-  stageLabel,
-}: {
-  state: AuditState;
-  moduleStats: ModuleStat[];
-  stageLabel: string;
-}) {
+export function ResultsPanel({ data }: { data: ResultsData }) {
   const [copied, setCopied] = useState(false);
-  const name = state.name || "Teilnehmer/in";
-  const company = state.company || "–";
-  const today = new Date().toLocaleDateString("de-DE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-  const exportText = buildExportText(state, moduleStats, {
-    name,
-    company,
-    stageLabel,
-    today,
-  });
+  const exportText = useMemo(() => buildExportText(data), [data]);
 
   const copy = async () => {
     try {
@@ -96,26 +83,13 @@ export function ResultsPanel({
   };
 
   const downloadJSON = () => {
-    const data = {
-      meta: { name, company, stage: stageLabel, date: today },
-      answers: state.answers,
-      selfRatedChallenges: state.challenges,
-      openAnswer: state.openAnswer,
-      moduleScores: moduleStats.map((s) => ({
-        module: `M${s.mod.id}`,
-        title: s.mod.title,
-        average: s.avg,
-        criticalPct: s.redPct,
-        naPct: s.naPct,
-        answeredCount: s.answered,
-        totalCount: s.total,
-      })),
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `startup-audit-${(name || "teilnehmer").replace(/\s+/g, "-").toLowerCase()}-${today.replace(/\./g, "")}.json`;
+    a.download = `startup-audit-${(data.name || "teilnehmer").replace(/\s+/g, "-").toLowerCase()}-${data.dateLabel.replace(/\./g, "")}.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -123,15 +97,15 @@ export function ResultsPanel({
   return (
     <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <header className="bg-primary text-primary-foreground px-6 py-5">
-        <h2 className="text-xl font-semibold">📈 Ihre Auswertung</h2>
+        <h2 className="text-xl font-semibold">📈 Auswertung</h2>
         <p className="text-sm opacity-80 mt-1">
-          {name} · {company} · {stageLabel} · {today}
+          {data.name} · {data.company || "–"} · {data.stageLabel} · {data.dateLabel}
         </p>
       </header>
 
       <div className="p-6 space-y-4">
         <div className="space-y-3">
-          {moduleStats.map((s) => {
+          {data.moduleStats.map((s) => {
             const badgeCls =
               s.avg === null
                 ? "bg-muted text-foreground"
@@ -141,13 +115,10 @@ export function ResultsPanel({
                     ? "bg-scale-2-soft text-scale-2"
                     : "bg-scale-4-soft text-scale-4";
             return (
-              <div
-                key={s.mod.id}
-                className="rounded-lg border border-border p-4"
-              >
+              <div key={s.modId} className="rounded-lg border border-border p-4">
                 <div className="flex items-center justify-between mb-2">
                   <div className="font-semibold text-sm">
-                    Modul {s.mod.id}: {s.mod.title}
+                    Modul {s.modId}: {s.title}
                   </div>
                   <span
                     className={cn(
@@ -159,7 +130,9 @@ export function ResultsPanel({
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  <span>📊 {s.answered}/{s.total} beantwortet</span>
+                  <span>
+                    📊 {s.answered}/{s.total} beantwortet
+                  </span>
                   <span>🔴 {s.redPct}% kritisch (0–1)</span>
                   <span>⬜ {s.naPct}% N/A</span>
                 </div>
@@ -168,17 +141,20 @@ export function ResultsPanel({
           })}
         </div>
 
-        {state.challenges.length > 0 && (
+        {data.challenges.length > 0 && (
           <div className="rounded-lg border border-border bg-accent/50 p-4">
             <h3 className="font-semibold text-sm text-primary mb-3">
               🎯 Priorisierte Workshop-Themen
             </h3>
             <ul className="space-y-2">
-              {state.challenges.map((id, i) => {
+              {data.challenges.map((id, i) => {
                 const m = MODULES.find((x) => x.id === id);
-                const stat = moduleStats.find((s) => s.mod.id === id);
+                const stat = data.moduleStats.find((s) => s.modId === id);
                 return (
-                  <li key={id} className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-b-0">
+                  <li
+                    key={id}
+                    className="flex items-center gap-3 py-1.5 border-b border-border/50 last:border-b-0"
+                  >
                     <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold flex items-center justify-center shrink-0">
                       {i + 1}
                     </span>
@@ -196,6 +172,17 @@ export function ResultsPanel({
                 );
               })}
             </ul>
+          </div>
+        )}
+
+        {data.openAnswer && (
+          <div className="rounded-lg border border-border p-4">
+            <h4 className="font-semibold text-sm text-primary mb-2">
+              💬 Offene Antwort
+            </h4>
+            <p className="text-sm whitespace-pre-wrap text-foreground/90">
+              {data.openAnswer}
+            </p>
           </div>
         )}
 

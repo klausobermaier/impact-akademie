@@ -6,9 +6,10 @@ import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
 import { ModuleCard } from "./ModuleCard";
 import { ChallengeSelector } from "./ChallengeSelector";
-import { ResultsPanel } from "./ResultsPanel";
+import { ResultsPanel, type ResultsData, type ModuleStat } from "./ResultsPanel";
 import { MODULES, SCALE_LABELS, STAGE_OPTIONS } from "./data";
 import { useAuditState } from "./useAuditState";
+import { submitAudit } from "@/lib/audit-submissions";
 
 const SCALE_DOT_CLS = [
   "bg-scale-0 text-white",
@@ -31,14 +32,19 @@ export function AuditPage() {
     moduleStats,
   } = useAuditState();
 
-  const [showResults, setShowResults] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [resultsData, setResultsData] = useState<ResultsData | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
 
   const stageLabel =
     STAGE_OPTIONS.find((s) => s.value === state.stage)?.label ?? "–";
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if (!state.name.trim()) {
+      setWarning("⚠️ Bitte geben Sie Ihren Namen an, damit die Auswertung zugeordnet werden kann.");
+      return;
+    }
     if (answeredCount < totalQuestions * 0.5) {
       setWarning(
         `⚠️ Bitte beantworten Sie mindestens 50% der Fragen (aktuell: ${answeredCount}/${totalQuestions}).`,
@@ -46,10 +52,58 @@ export function AuditPage() {
       return;
     }
     setWarning(null);
-    setShowResults(true);
-    setTimeout(() => {
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    setSubmitting(true);
+
+    const compactStats: ModuleStat[] = moduleStats.map((s) => ({
+      modId: s.mod.id,
+      title: s.mod.title,
+      avg: s.avg,
+      redPct: s.redPct,
+      naPct: s.naPct,
+      answered: s.answered,
+      total: s.total,
+    }));
+
+    try {
+      await submitAudit({
+        name: state.name,
+        company: state.company,
+        industry: state.industry,
+        stage: state.stage,
+        answers: state.answers,
+        challenges: state.challenges,
+        openAnswer: state.openAnswer,
+        moduleStats: compactStats,
+        answeredCount,
+        totalQuestions,
+      });
+
+      const today = new Date().toLocaleDateString("de-DE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      });
+
+      setResultsData({
+        name: state.name,
+        company: state.company,
+        stageLabel,
+        dateLabel: today,
+        answers: state.answers,
+        challenges: state.challenges,
+        openAnswer: state.openAnswer,
+        moduleStats: compactStats,
+      });
+
+      setTimeout(() => {
+        resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    } catch (err) {
+      console.error(err);
+      setWarning("⚠️ Übermittlung fehlgeschlagen. Bitte erneut versuchen.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -74,6 +128,12 @@ export function AuditPage() {
       </div>
 
       <main className="max-w-3xl mx-auto px-4 pb-16 space-y-5 pt-5">
+        {resultsData && (
+          <div className="rounded-xl border border-scale-4 bg-scale-4-soft px-5 py-4 text-sm text-foreground">
+            ✅ Vielen Dank, Ihre Antworten wurden übermittelt. Unten finden Sie Ihre persönliche Auswertung.
+          </div>
+        )}
+
         <div className="rounded-xl border border-border bg-accent/50 px-5 py-4 text-sm">
           <strong className="block text-primary mb-2">
             📏 Bewertungsskala – gilt für alle Fragen
@@ -101,13 +161,14 @@ export function AuditPage() {
           <h2 className="font-semibold text-primary mb-4">👤 Angaben zur Person</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="p-name">Name</Label>
+              <Label htmlFor="p-name">Name *</Label>
               <Input
                 id="p-name"
                 placeholder="Vor- und Nachname"
                 value={state.name}
                 onChange={(e) => updateField("name", e.target.value)}
                 className="mt-1.5"
+                required
               />
             </div>
             <div>
@@ -182,19 +243,17 @@ export function AuditPage() {
           />
 
           <div className="text-center mt-6 space-y-2 print:hidden">
-            <Button size="lg" onClick={handleGenerate}>
-              ✅ Auswertung erstellen
+            <Button size="lg" onClick={handleGenerate} disabled={submitting}>
+              {submitting ? "Wird übermittelt …" : resultsData ? "Erneut übermitteln" : "✅ Auswertung erstellen & senden"}
             </Button>
-            {warning && (
-              <p className="text-xs text-destructive">{warning}</p>
-            )}
+            {warning && <p className="text-xs text-destructive">{warning}</p>}
             <div>
               <button
                 type="button"
                 onClick={() => {
                   if (confirm("Alle Antworten zurücksetzen?")) {
                     reset();
-                    setShowResults(false);
+                    setResultsData(null);
                   }
                 }}
                 className="text-xs text-muted-foreground underline hover:text-foreground"
@@ -206,13 +265,7 @@ export function AuditPage() {
         </section>
 
         <div ref={resultsRef}>
-          {showResults && (
-            <ResultsPanel
-              state={state}
-              moduleStats={moduleStats}
-              stageLabel={stageLabel}
-            />
-          )}
+          {resultsData && <ResultsPanel data={resultsData} />}
         </div>
       </main>
     </div>
