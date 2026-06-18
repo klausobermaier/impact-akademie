@@ -224,7 +224,7 @@ export const MODULES: Module[] = [
       { id: "5.1", title: "Leadquellen", text: "Wir wissen genau, über welche Kanäle unsere potenziellen Kontakte (Leads) kommen." },
       { id: "5.2", title: "Leadmagneten", text: "Wir haben attraktive 0€-Produkte (Whitepaper, Checklisten etc.), um Kontaktdaten einzusammeln." },
       { id: "5.3", title: "Landingpages", text: "Wir nutzen optimierte Landingpages, die speziell darauf ausgelegt sind, Kontakte zu generieren." },
-      { id: "5.4", title: "Conversion-Optimierung", text: "Unsere Landingpages sind so gestaltet, dass die Hemmschwelle zur Eintragung minimal ist." },
+      { id: "5.4", title: "Conversion-Optimierung", text: "Unsere Kontakt- oder Leadgewinnungsprozesse sind darauf ausgelegt, Interessenten möglichst einfach zur Kontaktaufnahme zu bewegen." },
       { id: "5.5", title: "Kontaktformulare", text: "Unsere Formulare auf der Website funktionieren technisch einwandfrei und sind einfach auszufüllen." },
       { id: "5.6", title: "Newsletter-Anmeldung", text: "Der Anmeldeprozess für unseren Newsletter ist prominent platziert und wird genutzt." },
       { id: "5.7", title: "Workshops & Events", text: "Wir nutzen eigene Mini-Events oder Webinare gezielt zur Gewinnung neuer Kontakte." },
