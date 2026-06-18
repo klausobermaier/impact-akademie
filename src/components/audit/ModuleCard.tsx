@@ -6,11 +6,15 @@ import type { AnswerValue, Module } from "./data";
 export function ModuleCard({
   module: mod,
   answers,
+  numericInputs,
   onAnswer,
+  onNumericAnswer,
 }: {
   module: Module;
   answers: Record<string, AnswerValue>;
+  numericInputs: Record<string, number>;
   onAnswer: (qid: string, val: AnswerValue) => void;
+  onNumericAnswer: (qid: string, n: number | null) => void;
 }) {
   const answered = mod.questions.filter((q) => answers[q.id] !== undefined).length;
   const pct = Math.round((answered / mod.questions.length) * 100);
@@ -53,7 +57,9 @@ export function ModuleCard({
             key={q.id}
             question={q}
             value={answers[q.id]}
+            numericValue={numericInputs[q.id]}
             onChange={(v) => onAnswer(q.id, v)}
+            onNumericChange={(n) => onNumericAnswer(q.id, n)}
           />
         ))}
       </div>

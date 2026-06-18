@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MODULES, type AnswerValue } from "./data";
+import { MODULES, numberToScore, type AnswerValue } from "./data";
 
 const STORAGE_KEY = "startup-audit-state-v1";
 
@@ -9,6 +9,8 @@ export type AuditState = {
   industry: string;
   stage: string;
   answers: Record<string, AnswerValue>;
+  /** Raw numeric inputs for questions with kind === "number" (keyed by question id). */
+  numericInputs: Record<string, number>;
   challenges: number[];
   openAnswer: string;
 };
@@ -19,6 +21,7 @@ const DEFAULT_STATE: AuditState = {
   industry: "",
   stage: "",
   answers: {},
+  numericInputs: {},
   challenges: [],
   openAnswer: "",
 };
@@ -47,7 +50,27 @@ export function useAuditState() {
   }, [state, hydrated]);
 
   const setAnswer = useCallback((qid: string, val: AnswerValue) => {
-    setState((s) => ({ ...s, answers: { ...s.answers, [qid]: val } }));
+    setState((s) => {
+      const nextInputs = { ...s.numericInputs };
+      // If user picks N/A on a numeric question, clear the numeric input.
+      if (val === "na" && qid in nextInputs) delete nextInputs[qid];
+      return { ...s, answers: { ...s.answers, [qid]: val }, numericInputs: nextInputs };
+    });
+  }, []);
+
+  const setNumericAnswer = useCallback((qid: string, n: number | null) => {
+    setState((s) => {
+      const nextAnswers = { ...s.answers };
+      const nextInputs = { ...s.numericInputs };
+      if (n === null || Number.isNaN(n)) {
+        delete nextInputs[qid];
+        delete nextAnswers[qid];
+      } else {
+        nextInputs[qid] = n;
+        nextAnswers[qid] = numberToScore(n);
+      }
+      return { ...s, answers: nextAnswers, numericInputs: nextInputs };
+    });
   }, []);
 
   const toggleChallenge = useCallback((modId: number) => {
@@ -104,6 +127,7 @@ export function useAuditState() {
     state,
     hydrated,
     setAnswer,
+    setNumericAnswer,
     toggleChallenge,
     updateField,
     reset,
