@@ -353,7 +353,6 @@ export const MODULES: Module[] = [
         id: "2.8",
         title: "Zielgruppenschärfe",
         text: "Ich kann klar benennen, welche Kunden ausdrücklich NICHT zu meiner Zielgruppe gehören.",
-        isNew: true,
         scaleLabels: [
           "Nicht definiert",
           "Erste Erkenntnisse vorhanden",
