@@ -1,22 +1,89 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { AuditPage } from "@/components/audit/AuditPage";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Startup Marketing Audit – Selbstcheck" },
+      { title: "Startup Marketing Audit – Selbstcheck für Gründer" },
       {
         name: "description",
         content:
-          "Selbstcheck für Gründer & Startups: 11 Module rund um Marktvalidierung, Marketing, Vertrieb und Systeme. In 15–20 Minuten zur Workshop-Auswertung.",
+          "Strukturierter Selbstcheck mit 11 Modulen zu Marktvalidierung, Marketing, Vertrieb und Systemen. In 15–20 Minuten zur fundierten Workshop-Vorbereitung.",
       },
       { property: "og:title", content: "Startup Marketing Audit – Selbstcheck" },
       {
         property: "og:description",
         content:
-          "Selbstcheck für Gründer & Startups – 11 Module, KI-fertige Auswertung in 15–20 Minuten.",
+          "11 Module, ca. 15–20 Minuten, KI-fertiger Export. Ergebnisse werden direkt an den Trainer übermittelt.",
       },
     ],
   }),
-  component: AuditPage,
+  component: Landing,
 });
+
+function Landing() {
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <header className="bg-primary text-primary-foreground">
+        <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+          <p className="text-xs uppercase tracking-widest opacity-70 mb-4">
+            Selbstcheck · Workshop-Vorbereitung
+          </p>
+          <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
+            Startup Marketing Audit
+          </h1>
+          <p className="mt-5 text-base sm:text-lg opacity-85 max-w-2xl mx-auto">
+            In 15–20 Minuten zur fundierten Standortbestimmung deines Marketings &
+            Vertriebs – mit klarer Auswertung pro Modul und konkreten Workshop-Schwerpunkten.
+          </p>
+          <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
+            <Link
+              to="/audit"
+              className="inline-flex items-center justify-center rounded-md bg-background text-primary px-6 py-3 text-base font-semibold hover:bg-background/90 transition-colors"
+            >
+              Fragebogen starten →
+            </Link>
+            <Link
+              to="/admin"
+              className="text-sm opacity-70 hover:opacity-100 underline underline-offset-4"
+            >
+              Admin-Login
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1">
+        <section className="max-w-4xl mx-auto px-6 py-16 grid sm:grid-cols-3 gap-6">
+          {[
+            {
+              title: "11 Module",
+              text: "Marktvalidierung, Positionierung, Zielgruppe, Sichtbarkeit, Content, Leads, Vertrieb, Kundenbindung, Systeme, Planung, Partnerschaften.",
+            },
+            {
+              title: "Klare Skala",
+              text: "0–4 plus N/A für jeden Bereich – ehrlich und schnell. Fortschritt sichtbar, Antworten lokal gesichert.",
+            },
+            {
+              title: "KI-fertiger Export",
+              text: "Am Ende erhältst du deine persönliche Auswertung. Der Trainer bekommt automatisch alle Ergebnisse zur Workshop-Vorbereitung.",
+            },
+          ].map((b) => (
+            <div
+              key={b.title}
+              className="rounded-xl border border-border bg-card p-6 shadow-sm"
+            >
+              <h3 className="font-semibold text-primary">{b.title}</h3>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
+                {b.text}
+              </p>
+            </div>
+          ))}
+        </section>
+      </main>
+
+      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
+        Startup Marketing Audit
+      </footer>
+    </div>
+  );
+}
