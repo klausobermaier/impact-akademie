@@ -253,9 +253,9 @@ export const MODULES: Module[] = [
     note: "⚠️ Falls noch keine Kunden vorhanden sind, bitte bei allen Fragen N/A auswählen.",
     questions: [
       { id: "7.1", title: "Kundenzufriedenheit", text: "Wir messen und überprüfen systematisch die Zufriedenheit unserer bestehenden Kunden." },
-      { id: "7.2", title: "Wiederkäufer", text: "Wir haben Angebote, die dazu führen, dass Kunden regelmäßig wieder bei uns kaufen." },
-      { id: "7.3", title: "Cross-Selling", text: "Wir verkaufen bestehenden Kunden erfolgreich ergänzende Produkte oder Services." },
-      { id: "7.4", title: "Upselling", text: "Wir schaffen es, Kunden erfolgreich in unsere höherpreisigen Angebote zu entwickeln." },
+      { id: "7.2", title: "Wiederkäufer", text: "Wir haben Maßnahmen etabliert, die bestehende Kunden zu weiteren Käufen motivieren." },
+      { id: "7.3", title: "Cross-Selling", text: "Wir bieten bestehenden Kunden passende ergänzende Produkte oder Dienstleistungen an." },
+      { id: "7.4", title: "Upselling", text: "Wir bieten höherwertige Angebote an, die für bestehende Kunden attraktiv sind." },
       { id: "7.5", title: "Referenzen", text: "Wir bereiten Kundenerfolge aktiv als Case Studies oder Referenzen für unser Marketing auf." },
       { id: "7.6", title: "Bewertungen", text: "Wir haben ein System, um kontinuierlich Sterne-Bewertungen (z. B. Google, Trustpilot) zu sammeln." },
       { id: "7.7", title: "Empfehlungsmarketing", text: "Wir fordern zufriedene Kunden aktiv und systematisch auf, uns weiterzuempfehlen." },
