@@ -1,58 +1,103 @@
 ## Ziel
 
-Den Startup-Marketing-Audit-Fragebogen aus der hochgeladenen HTML-Datei vollständig als React/TanStack-Feature in die App integrieren – als Startseite UND als eigene Route, im Design-System des Projekts (Tailwind v4 + shadcn).
+Den bestehenden Audit-Fragebogen so erweitern, dass beliebige Personen ihn unabhängig via öffentlichem Link ausfüllen können. Ergebnisse (inkl. Name, Firma, alle Antworten) werden zentral gespeichert. Du als Admin hast einen geschützten Bereich, um alle Einreichungen aufzulisten, einzeln einzusehen, KI-Export zu kopieren und JSON zu exportieren.
 
-## Routen
+## Lovable Cloud aktivieren
 
-- `/` (`src/routes/index.tsx`) – ersetzt den Platzhalter, zeigt den vollständigen Fragebogen
-- `/audit` (`src/routes/audit.tsx`) – identische Audit-Seite unter dedizierter URL (für Sharing/Bookmarks)
-- Beide Routen rendern dieselbe `<AuditPage />`-Komponente, mit eigenen `head()`-Metadaten (Titel/Description/OG)
+Backend per Lovable Cloud: PostgreSQL-Datenbank, Auth, automatische API-Generierung – ohne externes Setup. Wird zu Beginn einmalig aktiviert.
 
-## Komponenten-Struktur
+## Datenbank-Schema (Migration)
 
-`src/components/audit/`
-- `AuditPage.tsx` – Container: Header, Progressbar (sticky), Skala-Legende, Intro-Formular, Module, Final-Block, Ergebnis-Block
-- `ModuleCard.tsx` – ein Modul mit Header, Subtitle/Note, Mini-Fortschrittsbalken, Fragen
-- `QuestionRow.tsx` – Fragetext + 6 Skalen-Buttons (0–4 + N/A), farbiger Selected-State
-- `ChallengeSelector.tsx` – Mehrfachauswahl mit max. 3 Modulen
-- `ResultsPanel.tsx` – Modul-Ergebnisse, priorisierte Workshop-Themen, KI-Export-Textarea, Buttons (Kopieren, Drucken, JSON-Download)
-- `data.ts` – `MODULES`-Array (11 Module M0–M10, alle Fragen), `SCALE_LABELS`, `SCALE_VALS` aus der HTML übernommen
-- `useAuditState.ts` – Hook für Antworten, ausgewählte Challenges, Intro-Felder, offene Antwort, abgeleitete Statistiken; Persistenz in `localStorage` für „nicht versehentlich verlieren"
+Tabelle `public.audit_submissions`:
+- `id uuid pk default gen_random_uuid()`
+- `created_at timestamptz default now()`
+- `name text not null`
+- `company text`
+- `industry text`
+- `stage text`
+- `answers jsonb not null` – `{ "0.1": 3, "0.2": "na", ... }`
+- `challenges int[] not null default '{}'`
+- `open_answer text`
+- `module_stats jsonb` – vorberechnete Auswertung pro Modul
+- `answered_count int not null`
+- `total_questions int not null`
 
-## Design / Styling
+Tabelle `public.user_roles` mit Enum `app_role` (`admin`, `user`) + Security-Definer-Funktion `has_role(user_id, role)` (Standard-Lovable-Pattern, kein Rollen-Feld auf Profil).
 
-Neutralisiertes Original-Branding in das Projekt-Design überführen:
-- Verwenden von shadcn-Komponenten: `Card`, `Button`, `Input`, `Select`, `Textarea`, `Checkbox`, `Progress`, `Badge`
-- Semantische Tokens (`bg-card`, `text-foreground`, `text-muted-foreground`, `border-border`, `bg-primary`, `bg-accent`) statt Hex-Werte
-- Skala-Farbskala (rot→orange→gelb→lime→grün) als eigene Tokens in `src/styles.css` ergänzen: `--audit-scale-0` … `--audit-scale-4` (oklch), plus `@theme inline` Mapping → Tailwind-Klassen `bg-audit-scale-0` usw. Für die N/A-Variante `bg-muted`.
-- „NEU"-Badge als shadcn `Badge variant="secondary"` mit Accent-Tönung
-- Print-Styles (`@media print`) für PDF-Export beibehalten
+### RLS-Policies
 
-## Funktionalität (1:1 zur HTML)
+`audit_submissions`:
+- INSERT: `TO anon, authenticated` mit `WITH CHECK (true)` – jeder Besucher darf seine eigene Einreichung anlegen (öffentlicher Link).
+- SELECT: nur `authenticated` mit `USING (public.has_role(auth.uid(), 'admin'))` – nur Admins sehen Einreichungen.
+- UPDATE/DELETE: nur Admin.
 
-- Antwort wählen → State-Update, farbiger Button, Modul-Mini-Bar + globale Progressbar
-- Max. 3 Challenges auswählbar (weitere disabled)
-- „Auswertung erstellen": ≥50% beantwortet erforderlich, sonst Hinweistext
-- Pro Modul: Ø-Wert (ohne N/A), % kritisch (0–1), % N/A, Score-Badge (rot < 1,5 / gelb < 2,5 / grün)
-- Priorisierte Workshop-Themen aus selectedChallenges + Statistik
-- KI-Export-Text exakt im Format der Original-Funktion `generateExportText`
-- Buttons: Text kopieren (Clipboard API), Drucken (`window.print()`), JSON-Download (Blob)
-- Smooth-Scroll zum Ergebnis-Block
+`user_roles`:
+- SELECT für `authenticated` (nur eigene Rolle): `USING (auth.uid() = user_id)`.
+- INSERT/UPDATE/DELETE nur `service_role` – Rollen werden per Migration/Seed gesetzt, nicht über die App.
 
-## SEO / Head
+GRANTs entsprechend (`anon` INSERT auf `audit_submissions`, `authenticated` SELECT + Admin-Schreibrechte).
 
-- `/`: Title „Startup Marketing Audit – Selbstcheck", deutschsprachige Description, OG-Tags
-- `/audit`: leicht abweichender Title („Audit · Startup Marketing Selbstcheck"), gleicher Inhaltskontext
+### Admin-Konto
+
+Das Admin-Konto wird einmalig nach erstem Sign-up gesetzt – per Migration mit deiner E-Mail als Variable, oder per manuellem SQL-Snippet im Cloud-Backend nach dem Sign-up. Plan-Vorgehen:
+1. Du registrierst dich nach dem Build über die Auth-Seite.
+2. Du teilst mir deine E-Mail mit, ich lege eine Migration nach, die genau dieser User-ID die Admin-Rolle in `user_roles` zuweist.
+
+## Routen-Struktur
+
+- `/` – Landing (Kurzbeschreibung „Startup-Marketing-Audit", Button „Fragebogen starten"). Public.
+- `/audit` – der bestehende Fragebogen. Public. Beim Klick auf „Auswertung erstellen" wird die Einreichung in die DB geschrieben und ein lokaler Erfolgs-Screen mit der eigenen Auswertung gezeigt (wie bisher, plus „Vielen Dank – wurde übermittelt").
+- `/auth` – integrationsverwaltete Auth-Seite (Email/Passwort, Sign-Up + Login).
+- `/_authenticated/admin` – Liste aller Einreichungen (Name, Firma, Datum, Ø-Score, Anzahl Fragen). Sortierbar nach Datum. Nicht-Admin → „Kein Zugriff".
+- `/_authenticated/admin/$id` – Detailansicht einer Einreichung: Stammdaten, Modul-Übersicht (gleiches ResultsPanel wie bisher), Antwortliste, ausgewählte Herausforderungen, offene Frage, KI-Export-Textarea (kopieren / drucken / JSON).
+
+## Komponenten
+
+Bestehend:
+- `AuditPage` bleibt; Submit-Logik wird erweitert.
+- `ResultsPanel` wird so refaktoriert, dass es eine Einreichung aus Props rendern kann (statt nur aus dem aktuellen useAuditState).
+
+Neu:
+- `src/lib/audit-submissions.ts` – clientseitige Supabase-Calls: `submitAudit(payload)` (INSERT als anon), `listSubmissions()` (Admin), `getSubmission(id)` (Admin).
+- `src/components/admin/SubmissionsTable.tsx` – Liste.
+- `src/routes/admin.tsx` (unter `_authenticated`) und `admin.$id.tsx`.
+- Landing `src/routes/index.tsx` wird zur Marketing-Seite; `audit.tsx` bleibt der Fragebogen.
+- Admin-Check via clientseitigem `has_role`-Aufruf (RPC) oder per Such-Query auf `user_roles` mit eigener ID; bei fehlender Rolle wird „Kein Zugriff" gerendert.
+
+## Submission-Flow
+
+1. Nutzer füllt Fragebogen aus, klickt „Auswertung erstellen".
+2. Wie bisher: clientseitige Validierung (≥50%), lokales `moduleStats` berechnen.
+3. Neu: `submitAudit({ name, company, industry, stage, answers, challenges, openAnswer, moduleStats, answeredCount, totalQuestions })` – INSERT via Supabase JS Client (anon-Key, RLS erlaubt nur INSERT).
+4. Bei Erfolg: Banner „Vielen Dank, Ihre Antworten wurden übermittelt." + ResultsPanel wie bisher.
+5. Bei Fehler: Toast/Hinweis, lokaler State bleibt erhalten (Retry möglich).
+6. Pflichtfeld „Name" wird erzwungen, damit zuordbar.
+
+## Admin-Auswertung
+
+- Tabelle: Datum, Name, Firma, Branche, Phase, Ø-Score (gemittelt über Module mit Wert), beantwortete Fragen, Button „Öffnen".
+- Detail: identisches ResultsPanel + KI-Export, plus Möglichkeit „JSON exportieren". Optional „Alle als JSON exportieren" auf der Liste.
+- Keine Bearbeitung, keine Löschung in V1 (kann später ergänzt werden).
+
+## „Nur einmal" – Soft-Enforcement
+
+Da es keinen Login für Teilnehmer gibt, ist eine echte „einmal pro Person"-Sperre serverseitig nicht zuverlässig möglich. Umsetzung:
+- Nach erfolgreicher Übermittlung wird `submissionId` in `localStorage` gespeichert; UI zeigt dauerhaft „Bereits übermittelt" mit Hinweis. Erneutes Absenden ist im UI blockiert, aber per Inkognito umgehbar.
+- Du kannst im Admin Duplikate (gleicher Name + Firma) optisch hervorheben.
+
+Wenn echte Einmaligkeit gefordert wird, müsste Plan-Option „Persönlicher Einladungs-Link pro Person" gewählt werden – das ist hier explizit nicht gewünscht.
 
 ## Technische Hinweise
 
-- Reines Frontend-Feature, kein Backend nötig (kein Lovable Cloud)
-- `lang="de"` durch deutschen Content gegeben (kein Eingriff in `<html lang>` von `__root.tsx` nötig, bleibt `en` – falls gewünscht später anpassen)
-- localStorage-Persistenz nur clientseitig (SSR-sicher mit `useEffect`-Hydrate)
-- Keine neuen Dependencies erforderlich (shadcn-Komponenten existieren bereits)
+- Supabase JS Client (Lovable Cloud) im Browser mit Publishable Key – INSERT vom anon-User wird durch die Policy ausdrücklich erlaubt, alle anderen Operationen erfordern Auth + Admin-Rolle.
+- Auth-Seite und `_authenticated`-Layout werden von der Cloud-Integration mitgeliefert.
+- `lang="de"` ggf. später anpassen.
+- Bestehende localStorage-Persistenz des Fragebogens bleibt erhalten, wird nach erfolgreicher Übermittlung geleert.
 
 ## Out of Scope
 
-- Versand/Speicherung der Ergebnisse auf Server
-- Auth / Mehrbenutzer
-- KI-Auswertung direkt in der App (bleibt Copy-to-Clipboard für Claude/ChatGPT, wie im Original)
+- E-Mail-Versand
+- Individuelle Einladungs-Tokens
+- Mehrere Admins / Rollenverwaltung im UI
+- Bearbeiten/Löschen von Einreichungen
+- KI-Auswertung direkt in der App
