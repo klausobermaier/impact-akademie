@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       audit_submissions: {
         Row: {
+          ai_evaluation: string | null
+          ai_evaluation_generated_at: string | null
           answered_count: number
           answers: Json
           challenges: number[]
@@ -30,6 +32,8 @@ export type Database = {
           total_questions: number
         }
         Insert: {
+          ai_evaluation?: string | null
+          ai_evaluation_generated_at?: string | null
           answered_count?: number
           answers?: Json
           challenges?: number[]
@@ -44,6 +48,8 @@ export type Database = {
           total_questions?: number
         }
         Update: {
+          ai_evaluation?: string | null
+          ai_evaluation_generated_at?: string | null
           answered_count?: number
           answers?: Json
           challenges?: number[]
