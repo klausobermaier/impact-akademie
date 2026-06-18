@@ -308,9 +308,6 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
             <Button variant="outline" onClick={copyQuestionnaire}>
               {copied ? "✅ Kopiert!" : "📋 Kopieren"}
             </Button>
-            <Button variant="outline" onClick={downloadQuestionnaire}>
-              ⬇️ Als Textdatei herunterladen
-            </Button>
             <Button variant="outline" onClick={() => window.print()}>
               🖨️ Drucken / Als PDF speichern
             </Button>
