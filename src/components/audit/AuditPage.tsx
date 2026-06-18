@@ -7,17 +7,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { ModuleCard } from "./ModuleCard";
 import { ChallengeSelector } from "./ChallengeSelector";
 import { ResultsPanel, type ResultsData, type ModuleStat } from "./ResultsPanel";
-import { MODULES, SCALE_LABELS, STAGE_OPTIONS } from "./data";
+import { MODULES, STAGE_OPTIONS } from "./data";
 import { useAuditState } from "./useAuditState";
 import { submitAudit } from "@/lib/audit-submissions";
 
-const SCALE_DOT_CLS = [
-  "bg-scale-0 text-white",
-  "bg-scale-1 text-white",
-  "bg-scale-2 text-foreground",
-  "bg-scale-3 text-white",
-  "bg-scale-4 text-white",
-];
 
 export function AuditPage() {
   const {
@@ -136,28 +129,6 @@ export function AuditPage() {
           </div>
         )}
 
-        <div className="rounded-xl border border-border bg-accent/50 px-5 py-4 text-sm">
-          <strong className="block text-primary mb-2">
-            📏 Bewertungsskala – gilt für alle Fragen
-          </strong>
-          <div className="flex flex-wrap gap-x-4 gap-y-2">
-            {SCALE_LABELS.map((label, i) => {
-              const isNa = i === 5;
-              return (
-                <div key={label} className="flex items-center gap-1.5">
-                  <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                      isNa ? "bg-muted-foreground text-white" : SCALE_DOT_CLS[i]
-                    }`}
-                  >
-                    {isNa ? "N/A" : i}
-                  </span>
-                  <span>{label}</span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
 
         <section className="rounded-xl border border-border bg-card shadow-sm p-6">
           <h2 className="font-semibold text-primary mb-4">👤 Angaben zur Person</h2>
