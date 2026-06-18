@@ -1,0 +1,220 @@
+import { useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import { ModuleCard } from "./ModuleCard";
+import { ChallengeSelector } from "./ChallengeSelector";
+import { ResultsPanel } from "./ResultsPanel";
+import { MODULES, SCALE_LABELS, STAGE_OPTIONS } from "./data";
+import { useAuditState } from "./useAuditState";
+
+const SCALE_DOT_CLS = [
+  "bg-scale-0 text-white",
+  "bg-scale-1 text-white",
+  "bg-scale-2 text-foreground",
+  "bg-scale-3 text-white",
+  "bg-scale-4 text-white",
+];
+
+export function AuditPage() {
+  const {
+    state,
+    setAnswer,
+    toggleChallenge,
+    updateField,
+    reset,
+    totalQuestions,
+    answeredCount,
+    progressPct,
+    moduleStats,
+  } = useAuditState();
+
+  const [showResults, setShowResults] = useState(false);
+  const [warning, setWarning] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement | null>(null);
+
+  const stageLabel =
+    STAGE_OPTIONS.find((s) => s.value === state.stage)?.label ?? "–";
+
+  const handleGenerate = () => {
+    if (answeredCount < totalQuestions * 0.5) {
+      setWarning(
+        `⚠️ Bitte beantworten Sie mindestens 50% der Fragen (aktuell: ${answeredCount}/${totalQuestions}).`,
+      );
+      return;
+    }
+    setWarning(null);
+    setShowResults(true);
+    setTimeout(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <header className="bg-primary text-primary-foreground px-6 py-10 text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold">📊 Startup Marketing Audit</h1>
+        <p className="mt-2 text-sm opacity-80 max-w-xl mx-auto">
+          Selbstcheck für Gründer & Startups · Bearbeitungszeit ca. 15–20 Minuten
+        </p>
+      </header>
+
+      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border px-6 py-3 print:hidden">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
+            <span>
+              {answeredCount} von {totalQuestions} Fragen beantwortet
+            </span>
+            <span>{progressPct}%</span>
+          </div>
+          <Progress value={progressPct} className="h-1.5" />
+        </div>
+      </div>
+
+      <main className="max-w-3xl mx-auto px-4 pb-16 space-y-5 pt-5">
+        <div className="rounded-xl border border-border bg-accent/50 px-5 py-4 text-sm">
+          <strong className="block text-primary mb-2">
+            📏 Bewertungsskala – gilt für alle Fragen
+          </strong>
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {SCALE_LABELS.map((label, i) => {
+              const isNa = i === 5;
+              return (
+                <div key={label} className="flex items-center gap-1.5">
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                      isNa ? "bg-muted-foreground text-white" : SCALE_DOT_CLS[i]
+                    }`}
+                  >
+                    {isNa ? "N/A" : i}
+                  </span>
+                  <span>{label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <section className="rounded-xl border border-border bg-card shadow-sm p-6">
+          <h2 className="font-semibold text-primary mb-4">👤 Angaben zur Person</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="p-name">Name</Label>
+              <Input
+                id="p-name"
+                placeholder="Vor- und Nachname"
+                value={state.name}
+                onChange={(e) => updateField("name", e.target.value)}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="p-company">Unternehmen / Startup</Label>
+              <Input
+                id="p-company"
+                placeholder="Name des Unternehmens"
+                value={state.company}
+                onChange={(e) => updateField("company", e.target.value)}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="p-industry">Branche</Label>
+              <Input
+                id="p-industry"
+                placeholder="z. B. SaaS, E-Commerce, Beratung …"
+                value={state.industry}
+                onChange={(e) => updateField("industry", e.target.value)}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="p-stage">Gründungszeitraum</Label>
+              <select
+                id="p-stage"
+                value={state.stage}
+                onChange={(e) => updateField("stage", e.target.value)}
+                className="mt-1.5 w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {STAGE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </section>
+
+        {MODULES.map((mod) => (
+          <ModuleCard
+            key={mod.id}
+            module={mod}
+            answers={state.answers}
+            onAnswer={setAnswer}
+          />
+        ))}
+
+        <section className="rounded-xl border border-border bg-card shadow-sm p-6">
+          <h3 className="text-base font-semibold text-primary">
+            🎯 Die drei größten Herausforderungen
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1 mb-4">
+            Bitte markieren Sie die <strong>drei Bereiche</strong>, in denen Sie aktuell den
+            größten Unterstützungsbedarf sehen (max. 3 Auswahlen):
+          </p>
+          <ChallengeSelector selected={state.challenges} onToggle={toggleChallenge} />
+
+          <div className="border-t border-border my-6" />
+
+          <h3 className="text-base font-semibold text-primary">💬 Offene Frage</h3>
+          <p className="text-sm text-muted-foreground mt-1 mb-3">
+            Wenn Sie im Workshop nur <strong>drei Themen intensiv bearbeiten</strong> könnten:
+            Welche wären das und warum?
+          </p>
+          <Textarea
+            placeholder="Ihre Antwort hier …"
+            value={state.openAnswer}
+            onChange={(e) => updateField("openAnswer", e.target.value)}
+            className="min-h-[120px]"
+          />
+
+          <div className="text-center mt-6 space-y-2 print:hidden">
+            <Button size="lg" onClick={handleGenerate}>
+              ✅ Auswertung erstellen
+            </Button>
+            {warning && (
+              <p className="text-xs text-destructive">{warning}</p>
+            )}
+            <div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (confirm("Alle Antworten zurücksetzen?")) {
+                    reset();
+                    setShowResults(false);
+                  }
+                }}
+                className="text-xs text-muted-foreground underline hover:text-foreground"
+              >
+                Antworten zurücksetzen
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <div ref={resultsRef}>
+          {showResults && (
+            <ResultsPanel
+              state={state}
+              moduleStats={moduleStats}
+              stageLabel={stageLabel}
+            />
+          )}
+        </div>
+      </main>
+    </div>
+  );
+}

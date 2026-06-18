@@ -59,6 +59,16 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-scale-0: var(--scale-0);
+  --color-scale-1: var(--scale-1);
+  --color-scale-2: var(--scale-2);
+  --color-scale-3: var(--scale-3);
+  --color-scale-4: var(--scale-4);
+  --color-scale-0-soft: var(--scale-0-soft);
+  --color-scale-1-soft: var(--scale-1-soft);
+  --color-scale-2-soft: var(--scale-2-soft);
+  --color-scale-3-soft: var(--scale-3-soft);
+  --color-scale-4-soft: var(--scale-4-soft);
 }
 
 :root {
@@ -95,6 +105,16 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --scale-0: oklch(0.628 0.258 27);
+  --scale-1: oklch(0.706 0.198 47);
+  --scale-2: oklch(0.795 0.171 86);
+  --scale-3: oklch(0.768 0.198 130);
+  --scale-4: oklch(0.723 0.196 149);
+  --scale-0-soft: oklch(0.97 0.03 27);
+  --scale-1-soft: oklch(0.975 0.03 47);
+  --scale-2-soft: oklch(0.98 0.04 86);
+  --scale-3-soft: oklch(0.98 0.04 130);
+  --scale-4-soft: oklch(0.975 0.04 149);
 }
 
 .dark {
