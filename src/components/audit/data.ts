@@ -243,7 +243,7 @@ export const MODULES: Module[] = [
       { id: "6.5", title: "Nachfassen", text: "Wir haken bei offenen Angeboten nach einem festen System und Zeitplan nach." },
       { id: "6.6", title: "Einwandbehandlung", text: "Wir können mit typischen Kundeneinwänden (z. B. „Zu teuer\", „Keine Zeit\") souverän umgehen." },
       { id: "6.7", title: "Abschluss", text: "Wir führen Verkaufsgespräche strukturiert und zielgerichtet bis zu einer Entscheidung." },
-      { id: "6.8", title: "Vertriebszahlen", text: "Wir wissen, wie viele Gespräche, Angebote und Abschlüsse wir durchschnittlich benötigen, um einen Kunden zu gewinnen.", isNew: true },
+      { id: "6.8", title: "Vertriebszahlen", text: "Wir erfassen und analysieren regelmäßig die wichtigsten Kennzahlen unseres Vertriebsprozesses.", isNew: true },
     ],
   },
   {
