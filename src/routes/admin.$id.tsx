@@ -105,6 +105,8 @@ function AdminDetailPage() {
     challenges: row.challenges,
     openAnswer: row.open_answer ?? "",
     moduleStats: row.module_stats,
+    submissionId: row.id,
+    initialAiText: row.ai_evaluation,
   };
 
   return (
