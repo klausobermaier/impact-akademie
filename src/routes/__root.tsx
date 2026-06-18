@@ -77,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Imapct Akademie: Marketing Evaluierung" },
+      { name: "description", content: "Open Sesame is a simple application that opens specified files or directories." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Imapct Akademie: Marketing Evaluierung" },
+      { property: "og:description", content: "Open Sesame is a simple application that opens specified files or directories." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Imapct Akademie: Marketing Evaluierung" },
+      { name: "twitter:description", content: "Open Sesame is a simple application that opens specified files or directories." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4146ed2b-81c5-4c25-8874-0eb3812c44a8/id-preview-b7975799--2cd8b9c3-114a-4ae2-8ce4-34984c7befda.lovable.app-1781765387474.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/4146ed2b-81c5-4c25-8874-0eb3812c44a8/id-preview-b7975799--2cd8b9c3-114a-4ae2-8ce4-34984c7befda.lovable.app-1781765387474.png" },
     ],
     links: [
       {
