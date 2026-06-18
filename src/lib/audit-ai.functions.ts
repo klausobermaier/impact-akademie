@@ -27,7 +27,7 @@ type EvalInput = {
 
 const SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater der Impact Akademie.
 
-Deine Aufgabe ist es, die Antworten eines Teilnehmers des „Startup Marketing Audits" auszuwerten und ihm eine kurze, praxisnahe Rückmeldung zu geben.
+Deine Aufgabe ist es, die Antworten eines Teilnehmers der „Impact Akademie" auszuwerten und ihm eine kurze, praxisnahe Rückmeldung zu geben.
 
 WICHTIGE REGELN
 - Sei konstruktiv, konkret und ehrlich.
@@ -127,7 +127,7 @@ export const generateAuditEvaluation = createServerFn({ method: "POST" })
 
 const GROUP_SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater sowie Workshop-Designer der Impact Akademie.
 
-Deine Aufgabe ist es, die Einzel-Auswertungen aller Teilnehmer des Startup Marketing Audits zu analysieren und daraus eine Gesamtbewertung der Gruppe für die Trainer zu erstellen.
+Deine Aufgabe ist es, die Einzel-Auswertungen aller Teilnehmer der Impact Akademie zu analysieren und daraus eine Gesamtbewertung der Gruppe für die Trainer zu erstellen.
 
 Ziel ist NICHT die individuelle Beratung einzelner Teilnehmer.
 Ziel ist die optimale Vorbereitung eines dreistündigen Workshops, damit die Trainer ihre Zeit auf die größten Engpässe der Gruppe konzentrieren.

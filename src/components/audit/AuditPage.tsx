@@ -104,9 +104,9 @@ export function AuditPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-primary text-primary-foreground px-6 py-10 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold">📊 Startup Marketing Audit</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">📊 Impact Akademie: Marketing & Vertrieb</h1>
         <p className="mt-2 text-sm opacity-80 max-w-xl mx-auto">
-          Selbstcheck für Gründer & Startups · Bearbeitungszeit ca. 15–20 Minuten
+          Bitte fülle spätestens 1 Woche vor dem Workshop diesen Fragebogen aus.
         </p>
       </header>
 

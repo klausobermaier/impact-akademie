@@ -3,17 +3,17 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Startup Marketing Audit – Selbstcheck für Gründer" },
+      { title: "Impact Akademie: Marketing & Vertrieb – Fragebogen" },
       {
         name: "description",
         content:
-          "Strukturierter Selbstcheck mit 11 Modulen zu Marktvalidierung, Marketing, Vertrieb und Systemen. In 15–20 Minuten zur fundierten Workshop-Vorbereitung.",
+          "Strukturierter Selbstcheck mit 11 Modulen zu Marktvalidierung, Marketing, Vertrieb und Systemen. Bitte fülle spätestens 1 Woche vor dem Workshop diesen Fragebogen aus.",
       },
-      { property: "og:title", content: "Startup Marketing Audit – Selbstcheck" },
+      { property: "og:title", content: "Impact Akademie: Marketing & Vertrieb" },
       {
         property: "og:description",
         content:
-          "11 Module, ca. 15–20 Minuten, KI-fertiger Export. Ergebnisse werden direkt an den Trainer übermittelt.",
+          "11 Module, Workshop-Vorbereitung. Ergebnisse werden direkt an den Trainer übermittelt.",
       },
     ],
   }),
@@ -29,11 +29,10 @@ function Landing() {
             Selbstcheck · Workshop-Vorbereitung
           </p>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
-            Startup Marketing Audit
+            Impact Akademie: Marketing & Vertrieb
           </h1>
           <p className="mt-5 text-base sm:text-lg opacity-85 max-w-2xl mx-auto">
-            In 15–20 Minuten zur fundierten Standortbestimmung deines Marketings &
-            Vertriebs – mit klarer Auswertung pro Modul und konkreten Workshop-Schwerpunkten.
+            Bitte fülle spätestens 1 Woche vor dem Workshop diesen Fragebogen aus – mit klarer Auswertung pro Modul und konkreten Workshop-Schwerpunkten.
           </p>
           <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
             <Link
@@ -82,7 +81,7 @@ function Landing() {
       </main>
 
       <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Startup Marketing Audit
+        Impact Akademie
       </footer>
     </div>
   );

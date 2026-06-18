@@ -9,7 +9,7 @@ export const Route = createFileRoute("/auth")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Admin-Login · Startup Marketing Audit" },
+      { title: "Admin-Login · Impact Akademie" },
       { name: "robots", content: "noindex" },
     ],
   }),
