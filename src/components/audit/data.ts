@@ -236,14 +236,14 @@ export const MODULES: Module[] = [
     key: "M6",
     title: "Vertriebsprozess",
     questions: [
-      { id: "6.1", title: "Buchungsweg", text: "Interessenten können auf unserer Website mit max. 2 Klicks unkompliziert ein Erstgespräch buchen (z. B. per Calendly)." },
+      { id: "6.1", title: "Buchungsweg", text: "Interessenten können unkompliziert mit uns Kontakt aufnehmen und ein Erstgespräch vereinbaren." },
       { id: "6.2", title: "Erstgespräch", text: "Wir haben einen klaren, erprobten Leitfaden für das erste Kennenlerngespräch." },
       { id: "6.3", title: "Bedarfsermittlung", text: "Wir können im Gespräch den genauen Bedarf und die Zahlungsbereitschaft des Kunden filtern." },
       { id: "6.4", title: "Angebotsprozess", text: "Unser Prozess zur Erstellung und Zusendung von Angeboten läuft schnell und standardisiert." },
       { id: "6.5", title: "Nachfassen", text: "Wir haken bei offenen Angeboten nach einem festen System und Zeitplan nach." },
       { id: "6.6", title: "Einwandbehandlung", text: "Wir können mit typischen Kundeneinwänden (z. B. „Zu teuer\", „Keine Zeit\") souverän umgehen." },
-      { id: "6.7", title: "Abschluss", text: "Wir führen Verkaufsgespräche gezielt und erfolgreich zum Vertragsabschluss." },
-      { id: "6.8", title: "Vertriebszahlen", text: "Wir wissen, wie viele Gespräche, Angebote und Abschlüsse wir durchschnittlich benötigen, um einen Kunden zu gewinnen.", isNew: true },
+      { id: "6.7", title: "Abschluss", text: "Wir führen Verkaufsgespräche strukturiert und zielgerichtet bis zu einer Entscheidung." },
+      { id: "6.8", title: "Vertriebszahlen", text: "Wir erfassen und analysieren regelmäßig die wichtigsten Kennzahlen unseres Vertriebsprozesses.", isNew: true },
     ],
   },
   {
