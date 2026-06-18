@@ -69,7 +69,7 @@ function buildAnswersTextForAi(d: ResultsData) {
 // Tiny markdown renderer (headings, bold, italic, lists, tables, paragraphs)
 function MarkdownView({ text }: { text: string }) {
   const renderInline = (s: string) => {
-    const parts: (string | JSX.Element)[] = [];
+    const parts: (string | ReactElement)[] = [];
     const regex = /\*\*([^*]+)\*\*|\*([^*]+)\*/g;
     let last = 0;
     let m: RegExpExecArray | null;
@@ -85,7 +85,7 @@ function MarkdownView({ text }: { text: string }) {
   };
 
   const lines = text.split("\n");
-  const blocks: JSX.Element[] = [];
+  const blocks: ReactElement[] = [];
   let i = 0;
   let k = 0;
   while (i < lines.length) {
