@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuditRouteImport } from './routes/audit'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminGroupRouteImport } from './routes/admin.group'
 import { Route as AdminIdRouteImport } from './routes/admin.$id'
 
@@ -26,72 +26,80 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminGroupRoute = AdminGroupRouteImport.update({
-  id: '/group',
-  path: '/group',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/group',
+  path: '/admin/group',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIdRoute = AdminIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminRoute,
+  id: '/admin/$id',
+  path: '/admin/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/group': typeof AdminGroupRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/group': typeof AdminGroupRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
   '/audit': typeof AuditRoute
   '/auth': typeof AuthRoute
   '/admin/$id': typeof AdminIdRoute
   '/admin/group': typeof AdminGroupRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/audit' | '/auth' | '/admin/$id' | '/admin/group'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/audit' | '/auth' | '/admin/$id' | '/admin/group'
-  id:
-    | '__root__'
+  fullPaths:
     | '/'
-    | '/admin'
     | '/audit'
     | '/auth'
     | '/admin/$id'
     | '/admin/group'
+    | '/admin/'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/' | '/audit' | '/auth' | '/admin/$id' | '/admin/group' | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/audit'
+    | '/auth'
+    | '/admin/$id'
+    | '/admin/group'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
   AuditRoute: typeof AuditRoute
   AuthRoute: typeof AuthRoute
+  AdminIdRoute: typeof AdminIdRoute
+  AdminGroupRoute: typeof AdminGroupRoute
+  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -110,13 +118,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -124,40 +125,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/group': {
       id: '/admin/group'
-      path: '/group'
+      path: '/admin/group'
       fullPath: '/admin/group'
       preLoaderRoute: typeof AdminGroupRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/$id': {
       id: '/admin/$id'
-      path: '/$id'
+      path: '/admin/$id'
       fullPath: '/admin/$id'
       preLoaderRoute: typeof AdminIdRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface AdminRouteChildren {
-  AdminIdRoute: typeof AdminIdRoute
-  AdminGroupRoute: typeof AdminGroupRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminIdRoute: AdminIdRoute,
-  AdminGroupRoute: AdminGroupRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
   AuditRoute: AuditRoute,
   AuthRoute: AuthRoute,
+  AdminIdRoute: AdminIdRoute,
+  AdminGroupRoute: AdminGroupRoute,
+  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
