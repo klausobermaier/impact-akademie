@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
-import { MODULES } from "./data";
+import { MODULES, SCALE_LABELS } from "./data";
 import type { AnswerValue } from "./data";
 import { generateAuditEvaluation } from "@/lib/audit-ai.functions";
 
