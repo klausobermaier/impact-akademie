@@ -103,8 +103,8 @@ export const generateAuditEvaluation = createServerFn({ method: "POST" })
     const gateway = createLovableAiGatewayProvider(key);
     const { text } = await generateText({
       model: gateway("google/gemini-3-flash-preview"),
-      system: SYSTEM_PROMPT,
-      prompt: buildUserPrompt(data),
+      system: AUDIT_EVAL_SYSTEM_PROMPT,
+      prompt: buildAuditEvalUserPrompt(data),
     });
 
     // Persist to submission if submissionId was provided
