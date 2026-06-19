@@ -230,6 +230,49 @@ export function ResultsPanel({
           </p>
         </div>
 
+        {showQuestionDetails && (
+          <div className="space-y-4">
+            <h3 className="font-semibold text-primary">📋 Einzelauswertung der Fragen</h3>
+            {MODULES.map((mod) => (
+              <div key={mod.id} className="rounded-lg border border-border bg-card p-4">
+                <h4 className="font-semibold text-sm text-primary mb-3">
+                  Modul {mod.id}: {mod.title}
+                </h4>
+                <ul className="space-y-2">
+                  {mod.questions.map((q) => {
+                    const val = data.answers[q.id];
+                    let label: string;
+                    if (val === undefined) label = "–";
+                    else if (val === "na") label = q.naLabel ?? "N/A";
+                    else if (q.kind === "number") {
+                      const raw = data.answers[q.id];
+                      label = `${raw} (Score ${val})`;
+                    } else {
+                      label = `${val} – ${SCALE_LABELS[val as number] ?? ""}`;
+                    }
+                    return (
+                      <li
+                        key={q.id}
+                        className="flex items-start justify-between gap-3 text-sm border-b border-border/50 pb-2 last:border-b-0 last:pb-0"
+                      >
+                        <div className="flex-1">
+                          <div className="font-medium text-foreground/90">
+                            {q.id} {q.title}
+                          </div>
+                          <div className="text-xs text-muted-foreground">{q.text}</div>
+                        </div>
+                        <div className="text-sm font-semibold text-primary whitespace-nowrap">
+                          {label}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Drucken / PDF */}
         <div className="rounded-lg border border-border bg-muted/40 p-5">
           <h3 className="font-semibold text-primary mb-1">📄 Fragebogen & KI-Auswertung</h3>
