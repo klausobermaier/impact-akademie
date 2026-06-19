@@ -14,6 +14,7 @@ import {
   createAppUser,
   deleteSubmission,
 } from "@/lib/admin-users.functions";
+import { generateDemoSubmission } from "@/lib/admin-demo.functions";
 
 export const Route = createFileRoute("/admin/")({
   ssr: false,
