@@ -56,6 +56,8 @@ WICHTIG ZUR ANSPRACHE
 
 ERSTELLE DIE AUSWERTUNG IN FOLGENDEM FORMAT (Markdown):
 
+WICHTIG: Erzeuge KEINEN Abschnitt „Deine Ergebnisse im Überblick" oder „Ihre Ergebnisse im Überblick" und keine Modul-Karten / Tabellen mit farbigen Emoji-Indikatoren (🟢/🟡/🔴). Die Modul-Übersicht inkl. Durchschnittswerte wird vom System gerendert. Beginne direkt mit „## Deine größten Stärken".
+
 ## Deine größten Stärken
 Nenne die 2–3 Module mit den höchsten Werten. Beschreibe in wenigen Sätzen, was bei Dir bereits gut entwickelt ist, welche Vorteile daraus entstehen und warum dies eine gute Grundlage für weiteres Wachstum darstellt.
 

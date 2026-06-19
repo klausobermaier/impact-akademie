@@ -126,25 +126,6 @@ function AdminDetailPage() {
     year: "numeric",
   });
 
-  function stripOverviewSection(text: string): string {
-    const lines = text.split("\n");
-    const result: string[] = [];
-    let inOverview = false;
-    for (const line of lines) {
-      if (/^##\s*Ihre Ergebnisse im Überblick/i.test(line)) {
-        inOverview = true;
-        continue;
-      }
-      if (inOverview && /^##\s/.test(line)) {
-        inOverview = false;
-      }
-      if (!inOverview) {
-        result.push(line);
-      }
-    }
-    return result.join("\n").trim();
-  }
-
   const data: ResultsData = {
     name: row.name,
     company: row.company ?? "",
@@ -155,7 +136,7 @@ function AdminDetailPage() {
     openAnswer: row.open_answer ?? "",
     moduleStats: row.module_stats,
     submissionId: row.id,
-    initialAiText: row.ai_evaluation ? stripOverviewSection(row.ai_evaluation) : row.ai_evaluation,
+    initialAiText: row.ai_evaluation,
   };
 
   return (

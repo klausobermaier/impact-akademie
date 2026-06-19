@@ -62,6 +62,76 @@ export type ResultsData = {
 };
 
 
+// Entfernt einen evtl. von der KI erzeugten Block „Ihre/Deine Ergebnisse im Überblick".
+// Die Übersicht wird jetzt deterministisch im Code gerendert.
+function stripOverviewSection(text: string): string {
+  const lines = text.split("\n");
+  const out: string[] = [];
+  let inOverview = false;
+  for (const line of lines) {
+    if (/^##\s*(Ihre|Deine)\s+Ergebnisse\s+im\s+Überblick/i.test(line)) {
+      inOverview = true;
+      continue;
+    }
+    if (inOverview && /^##\s/.test(line)) inOverview = false;
+    if (!inOverview) out.push(line);
+  }
+  return out.join("\n").trim();
+}
+
+function formatNum(n: number): string {
+  return n.toFixed(1).replace(".", ",");
+}
+
+function ModuleOverview({ stats }: { stats: ModuleStat[] }) {
+  const rated = stats.filter((s) => s.avg !== null);
+  const overallAvg =
+    rated.length > 0
+      ? rated.reduce((acc, s) => acc + (s.avg as number), 0) / rated.length
+      : null;
+
+  return (
+    <div className="rounded-lg border border-border bg-card p-5 space-y-4">
+      <div className="flex items-baseline justify-between flex-wrap gap-2">
+        <h3 className="font-semibold text-primary">📊 Modul-Übersicht</h3>
+        {overallAvg !== null && (
+          <div className="text-sm text-muted-foreground">
+            Gesamtdurchschnitt:{" "}
+            <span className="font-semibold text-foreground">
+              {formatNum(overallAvg)} / 4
+            </span>{" "}
+            (Mittel über {rated.length} bewertete Module)
+          </div>
+        )}
+      </div>
+      <ul className="divide-y divide-border">
+        {stats.map((s) => (
+          <li
+            key={s.modId}
+            className="py-2.5 flex items-center justify-between gap-3 flex-wrap"
+          >
+            <div className="min-w-0 flex-1">
+              <div className="text-sm font-medium text-foreground">
+                Modul {s.modId}: {s.title}
+              </div>
+              <div className="text-xs text-muted-foreground mt-0.5">
+                {s.answered}/{s.total} beantwortet · {s.redPct}% kritisch (Score 0–1) · {s.naPct}% N/A
+              </div>
+            </div>
+            <div className="text-sm font-semibold whitespace-nowrap rounded-md border border-border bg-muted px-2.5 py-1">
+              {s.avg !== null ? `Ø ${formatNum(s.avg)} / 4` : "Nicht bewertet"}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p className="text-xs text-muted-foreground">
+        Skala 0–4: 0 = nicht vorhanden, 4 = exzellent etabliert. Module mit
+        100% N/A fließen nicht in den Gesamtdurchschnitt ein.
+      </p>
+    </div>
+  );
+}
+
 function buildAnswersTextForAi(d: ResultsData) {
   let s = "";
   MODULES.forEach((mod) => {
@@ -238,6 +308,8 @@ export function ResultsPanel({
       </header>
 
       <div className="p-6 space-y-6">
+        <ModuleOverview stats={data.moduleStats} />
+
         {/* KI-Auswertung */}
         <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
           <div className="flex items-center justify-between mb-3">
@@ -256,7 +328,7 @@ export function ResultsPanel({
             </div>
           )}
 
-          {aiText && <MarkdownView text={toDuForm(aiText)} />}
+          {aiText && <MarkdownView text={stripOverviewSection(toDuForm(aiText))} />}
 
           <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-primary/10">
             Diese Auswertung wurde mit Hilfe einer KI erstellt.
