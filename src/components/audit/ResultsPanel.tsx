@@ -300,25 +300,15 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
           {aiText && <MarkdownView text={aiText} />}
         </div>
 
-        {/* Fragebogen-Kopie */}
+        {/* Drucken / PDF */}
         <div className="rounded-lg border border-border bg-muted/40 p-5">
-          <h3 className="font-semibold text-primary mb-1">📄 Ihre Fragebogen-Kopie</h3>
+          <h3 className="font-semibold text-primary mb-1">📄 Fragebogen & KI-Auswertung</h3>
           <p className="text-xs text-muted-foreground mb-3">
-            Alle Ihre Antworten zum Nachlesen, Speichern oder Ausdrucken.
+            Speichern Sie Ihre Antworten und die KI-Auswertung als PDF.
           </p>
-          <Textarea
-            readOnly
-            value={questionnaireText}
-            className="font-mono text-xs h-64 bg-background"
-          />
-          <div className="flex flex-wrap gap-2 mt-3">
-            <Button variant="outline" onClick={copyQuestionnaire}>
-              {copied ? "✅ Kopiert!" : "📋 Kopieren"}
-            </Button>
-            <Button variant="outline" onClick={() => window.print()}>
-              🖨️ Drucken / Als PDF speichern
-            </Button>
-          </div>
+          <Button variant="outline" onClick={() => window.print()}>
+            🖨️ Drucken / Als PDF speichern
+          </Button>
         </div>
 
         {data.openAnswer && (

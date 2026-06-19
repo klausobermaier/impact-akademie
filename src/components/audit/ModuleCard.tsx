@@ -26,11 +26,6 @@ export function ModuleCard({
           Modul {mod.id}
         </span>
         <h2 className="text-base font-semibold flex-1">{mod.title}</h2>
-        {mod.isNew && (
-          <Badge variant="secondary" className="uppercase tracking-wider text-[10px]">
-            Neu
-          </Badge>
-        )}
       </header>
 
       {mod.subtitle && (

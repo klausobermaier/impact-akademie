@@ -66,11 +66,6 @@ export function QuestionRow({
         <div className="flex-1">
           <div className="font-semibold text-sm text-foreground flex flex-wrap items-center gap-2">
             {question.title}
-            {question.isNew && (
-              <span className="text-[10px] font-bold uppercase tracking-wider text-primary bg-accent px-1.5 py-0.5 rounded-full">
-                Neu
-              </span>
-            )}
           </div>
           <div className="text-sm text-muted-foreground mt-0.5">{renderedText}</div>
         </div>
