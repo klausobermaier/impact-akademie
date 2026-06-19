@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
 import {
   currentUserIsAdmin,
   getSubmission,
@@ -8,6 +10,10 @@ import {
 } from "@/lib/audit-submissions";
 import { ResultsPanel, type ResultsData } from "@/components/audit/ResultsPanel";
 import { STAGE_OPTIONS } from "@/components/audit/data";
+import {
+  clearAiEvaluation,
+  deleteSubmission,
+} from "@/lib/admin-users.functions";
 
 export const Route = createFileRoute("/admin/$id")({
   ssr: false,
@@ -23,6 +29,8 @@ export const Route = createFileRoute("/admin/$id")({
 function AdminDetailPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
+  const deleteFn = useServerFn(deleteSubmission);
+  const clearAiFn = useServerFn(clearAiEvaluation);
   const [loading, setLoading] = useState(true);
   const [row, setRow] = useState<SubmissionRow | null>(null);
   const [allowed, setAllowed] = useState(false);
@@ -53,6 +61,28 @@ function AdminDetailPage() {
       cancelled = true;
     };
   }, [id, navigate]);
+
+  const handleDeleteSubmission = async () => {
+    if (!window.confirm("Diese Einreichung wirklich komplett löschen?")) return;
+    try {
+      await deleteFn({ data: { id } });
+      navigate({ to: "/admin" });
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Löschen fehlgeschlagen.");
+    }
+  };
+
+  const handleClearAi = async () => {
+    if (!window.confirm("KI-Zusammenfassung wirklich löschen?")) return;
+    try {
+      await clearAiFn({ data: { id } });
+      setRow((prev) =>
+        prev ? { ...prev, ai_evaluation: null, ai_evaluation_generated_at: null } : prev,
+      );
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Löschen fehlgeschlagen.");
+    }
+  };
 
   if (loading) {
     return (
@@ -116,8 +146,18 @@ function AdminDetailPage() {
           <Link to="/admin" className="text-sm underline opacity-80 hover:opacity-100">
             ← Zurück zur Liste
           </Link>
-          <span className="text-xs opacity-75">ID: {row.id}</span>
+          <div className="flex items-center gap-2 flex-wrap">
+            {row.ai_evaluation && (
+              <Button variant="secondary" size="sm" onClick={handleClearAi}>
+                KI-Zusammenfassung löschen
+              </Button>
+            )}
+            <Button variant="destructive" size="sm" onClick={handleDeleteSubmission}>
+              Einreichung löschen
+            </Button>
+          </div>
         </div>
+        <div className="max-w-3xl mx-auto mt-2 text-xs opacity-75">ID: {row.id}</div>
       </header>
       <main className="max-w-3xl mx-auto px-4 py-6 space-y-5">
         <div className="rounded-xl border border-border bg-card p-5 text-sm">
