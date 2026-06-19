@@ -38,6 +38,31 @@ function toDuForm(text: string): string {
   return out;
 }
 
+function splitWorkshopBlock(text: string): { before: string; workshop: string; after: string } {
+  const lines = text.split("\n");
+  let startIdx = -1;
+  let endIdx = lines.length;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+Empfehlung für Deinen Workshop/i.test(lines[i])) {
+      startIdx = i;
+    } else if (startIdx !== -1 && /^##\s+/.test(lines[i])) {
+      endIdx = i;
+      break;
+    }
+  }
+
+  if (startIdx === -1) {
+    return { before: text, workshop: "", after: "" };
+  }
+
+  return {
+    before: lines.slice(0, startIdx).join("\n"),
+    workshop: lines.slice(startIdx, endIdx).join("\n"),
+    after: lines.slice(endIdx).join("\n"),
+  };
+}
+
 export type ModuleStat = {
   modId: number;
   title: string;
@@ -319,7 +344,21 @@ export function ResultsPanel({
             </div>
           )}
 
-          {aiText && <MarkdownView text={stripOverviewSection(toDuForm(aiText))} />}
+          {aiText && (() => {
+            const processed = stripOverviewSection(toDuForm(aiText));
+            const { before, workshop, after } = splitWorkshopBlock(processed);
+            return (
+              <>
+                {before && <MarkdownView text={before} />}
+                {workshop && (
+                  <div className="rounded-lg border-2 border-primary/40 bg-primary/10 p-5 my-5 shadow-sm">
+                    <MarkdownView text={workshop} />
+                  </div>
+                )}
+                {after && <MarkdownView text={after} />}
+              </>
+            );
+          })()}
 
           <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-primary/10">
             Diese Auswertung wurde mit Hilfe einer KI erstellt.
