@@ -308,6 +308,8 @@ export function ResultsPanel({
       </header>
 
       <div className="p-6 space-y-6">
+        <ModuleOverview stats={data.moduleStats} />
+
         {/* KI-Auswertung */}
         <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
           <div className="flex items-center justify-between mb-3">
