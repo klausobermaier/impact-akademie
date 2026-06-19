@@ -25,7 +25,7 @@ type EvalInput = {
   answersText: string;
 };
 
-const SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater der Impact Akademie.
+export const AUDIT_EVAL_SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater der Impact Akademie.
 
 Deine Aufgabe ist es, die Antworten eines Teilnehmers der „Impact Akademie" auszuwerten und ihm eine kurze, praxisnahe Rückmeldung zu geben.
 
