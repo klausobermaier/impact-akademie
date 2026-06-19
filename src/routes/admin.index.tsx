@@ -298,6 +298,19 @@ function AdminListPage() {
           )}
         </section>
 
+        <section className="rounded-xl border border-dashed border-border bg-muted/20 p-5 flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 className="text-sm font-semibold">Test-Fragebogen generieren</h2>
+            <p className="text-xs text-muted-foreground">
+              Erstellt einen ausgefüllten Demo-Fragebogen mit zufälligem Profil und automatischer KI-Auswertung.
+            </p>
+            {demoError && <p className="text-xs text-destructive mt-1">{demoError}</p>}
+          </div>
+          <Button size="sm" onClick={handleGenerateDemo} disabled={generatingDemo}>
+            {generatingDemo ? "Wird generiert …" : "🎲 Demo-Fragebogen erzeugen"}
+          </Button>
+        </section>
+
         {error && (
           <p className="text-sm text-destructive">{error}</p>
         )}
