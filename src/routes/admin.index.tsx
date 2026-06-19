@@ -128,7 +128,7 @@ function AdminListPage() {
     setGeneratingDemo(true);
     setDemoError(null);
     try {
-      await generateDemoFn({ data: undefined });
+      await generateDemoFn();
       const data = await listSubmissions();
       setRows(data);
     } catch (err) {
