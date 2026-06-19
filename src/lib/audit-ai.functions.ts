@@ -78,7 +78,7 @@ Eine konkrete Handlungsempfehlung, die Du innerhalb der nächsten sieben Tage um
 
 MAXIMALE LÄNGE DER GESAMTEN AUSWERTUNG: 800 Wörter.`;
 
-function buildUserPrompt(d: EvalInput): string {
+export function buildAuditEvalUserPrompt(d: EvalInput): string {
   let s = `TEILNEHMER\n`;
   s += `Name: ${d.name}\n`;
   s += `Unternehmen: ${d.company || "–"}\n`;
