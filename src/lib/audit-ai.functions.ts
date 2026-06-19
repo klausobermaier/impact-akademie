@@ -50,25 +50,29 @@ AUSWERTUNGSLOGIK
   - Kundengewinnung vor Kundenbindung
 - Gib keine Empfehlungen für fortgeschrittene Themen, wenn grundlegende Themen noch ungelöst sind.
 
+WICHTIG ZUR ANSPRACHE
+- Sprich den Teilnehmer durchgängig mit „Du" / „Dein" / „Dir" an.
+- Verwende NIEMALS die Höflichkeitsform „Sie" / „Ihr" / „Ihnen" / „Ihre".
+
 ERSTELLE DIE AUSWERTUNG IN FOLGENDEM FORMAT (Markdown):
 
-## Ihre größten Stärken
-Nenne die 2–3 Module mit den höchsten Werten. Beschreibe in wenigen Sätzen, was bereits gut entwickelt ist, welche Vorteile daraus entstehen und warum dies eine gute Grundlage für weiteres Wachstum darstellt.
+## Deine größten Stärken
+Nenne die 2–3 Module mit den höchsten Werten. Beschreibe in wenigen Sätzen, was bei Dir bereits gut entwickelt ist, welche Vorteile daraus entstehen und warum dies eine gute Grundlage für weiteres Wachstum darstellt.
 
-## Ihre größten Entwicklungsfelder
+## Deine größten Entwicklungsfelder
 Nenne die 2–3 Module mit den niedrigsten Werten. Beschreibe Risiken, Auswirkungen auf Marketing/Vertrieb/Wachstum und warum diese Themen aktuell wichtiger sind als andere.
 
-## Einschätzung Ihrer aktuellen Situation
-Kurze Analyse (max. 250 Wörter): Wo steht das Unternehmen? Welche Muster sind erkennbar? Welcher Engpass verhindert aktuell wahrscheinlich das stärkste Wachstum?
+## Einschätzung Deiner aktuellen Situation
+Kurze Analyse (max. 250 Wörter): Wo stehst Du mit Deinem Unternehmen? Welche Muster sind erkennbar? Welcher Engpass verhindert aktuell wahrscheinlich Dein stärkstes Wachstum?
 
-## Empfehlung für den Workshop
+## Empfehlung für Deinen Workshop
 Maximal drei Themenbereiche:
-**Priorität 1: [Thema]** — Warum dieses Thema aktuell den größten Nutzen bringt. *Konkretes Ziel:* [1 Satz]
-**Priorität 2: [Thema]** — Warum dieses Thema aktuell relevant ist. *Konkretes Ziel:* [1 Satz]
-**Priorität 3: [Thema]** — Warum dieses Thema aktuell relevant ist. *Konkretes Ziel:* [1 Satz]
+**Priorität 1: [Thema]** — Warum dieses Thema Dir aktuell den größten Nutzen bringt. *Konkretes Ziel:* [1 Satz]
+**Priorität 2: [Thema]** — Warum dieses Thema für Dich aktuell relevant ist. *Konkretes Ziel:* [1 Satz]
+**Priorität 3: [Thema]** — Warum dieses Thema für Dich aktuell relevant ist. *Konkretes Ziel:* [1 Satz]
 
-## Nächster sinnvoller Schritt
-Eine konkrete Handlungsempfehlung, die der Teilnehmer innerhalb der nächsten sieben Tage umsetzen kann.
+## Dein nächster sinnvoller Schritt
+Eine konkrete Handlungsempfehlung, die Du innerhalb der nächsten sieben Tage umsetzen kannst.
 
 MAXIMALE LÄNGE DER GESAMTEN AUSWERTUNG: 800 Wörter.`;
 
