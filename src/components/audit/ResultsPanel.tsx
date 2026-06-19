@@ -141,7 +141,13 @@ function MarkdownView({ text }: { text: string }) {
   return <div>{blocks}</div>;
 }
 
-export function ResultsPanel({ data }: { data: ResultsData }) {
+export function ResultsPanel({
+  data,
+  showQuestionDetails = false,
+}: {
+  data: ResultsData;
+  showQuestionDetails?: boolean;
+}) {
   const generate = useServerFn(generateAuditEvaluation);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
