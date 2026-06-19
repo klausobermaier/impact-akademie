@@ -38,6 +38,31 @@ function toDuForm(text: string): string {
   return out;
 }
 
+function splitWorkshopBlock(text: string): { before: string; workshop: string; after: string } {
+  const lines = text.split("\n");
+  let startIdx = -1;
+  let endIdx = lines.length;
+
+  for (let i = 0; i < lines.length; i++) {
+    if (/^##\s+Empfehlung für Deinen Workshop/i.test(lines[i])) {
+      startIdx = i;
+    } else if (startIdx !== -1 && /^##\s+/.test(lines[i])) {
+      endIdx = i;
+      break;
+    }
+  }
+
+  if (startIdx === -1) {
+    return { before: text, workshop: "", after: "" };
+  }
+
+  return {
+    before: lines.slice(0, startIdx).join("\n"),
+    workshop: lines.slice(startIdx, endIdx).join("\n"),
+    after: lines.slice(endIdx).join("\n"),
+  };
+}
+
 export type ModuleStat = {
   modId: number;
   title: string;
