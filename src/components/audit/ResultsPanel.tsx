@@ -29,30 +29,6 @@ export type ResultsData = {
   initialAiText?: string | null;
 };
 
-function buildQuestionnaireCopy(d: ResultsData) {
-  let txt = `==================================================\nSTARTUP MARKETING AUDIT – IHRE ANTWORTEN\n==================================================\n`;
-  txt += `Teilnehmer/in: ${d.name}\n`;
-  txt += `Unternehmen: ${d.company || "–"}\n`;
-  txt += `Gründungsphase: ${d.stageLabel}\n`;
-  txt += `Datum: ${d.dateLabel}\n\n`;
-  MODULES.forEach((mod) => {
-    txt += `\n── Modul ${mod.id}: ${mod.title} ──\n`;
-    mod.questions.forEach((q) => {
-      const val = d.answers[q.id];
-      const display = val === undefined ? "–" : val === "na" ? "N/A" : String(val);
-      txt += `${q.id}  ${q.title}\n   Antwort: ${display}\n`;
-    });
-  });
-  txt += `\n── Drei größte Herausforderungen ──\n`;
-  if (d.challenges.length > 0) {
-    d.challenges.forEach((id, i) => {
-      const m = MODULES.find((x) => x.id === id);
-      txt += `${i + 1}. Modul ${id}: ${m?.title ?? ""}\n`;
-    });
-  } else txt += `(keine Auswahl)\n`;
-  txt += `\n── Offene Antwort ──\n${d.openAnswer || "(keine Antwort)"}\n`;
-  return txt;
-}
 
 function buildAnswersTextForAi(d: ResultsData) {
   let s = "";
