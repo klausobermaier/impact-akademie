@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { MODULES } from "./data";
 import type { AnswerValue } from "./data";
@@ -30,30 +29,6 @@ export type ResultsData = {
   initialAiText?: string | null;
 };
 
-function buildQuestionnaireCopy(d: ResultsData) {
-  let txt = `==================================================\nSTARTUP MARKETING AUDIT – IHRE ANTWORTEN\n==================================================\n`;
-  txt += `Teilnehmer/in: ${d.name}\n`;
-  txt += `Unternehmen: ${d.company || "–"}\n`;
-  txt += `Gründungsphase: ${d.stageLabel}\n`;
-  txt += `Datum: ${d.dateLabel}\n\n`;
-  MODULES.forEach((mod) => {
-    txt += `\n── Modul ${mod.id}: ${mod.title} ──\n`;
-    mod.questions.forEach((q) => {
-      const val = d.answers[q.id];
-      const display = val === undefined ? "–" : val === "na" ? "N/A" : String(val);
-      txt += `${q.id}  ${q.title}\n   Antwort: ${display}\n`;
-    });
-  });
-  txt += `\n── Drei größte Herausforderungen ──\n`;
-  if (d.challenges.length > 0) {
-    d.challenges.forEach((id, i) => {
-      const m = MODULES.find((x) => x.id === id);
-      txt += `${i + 1}. Modul ${id}: ${m?.title ?? ""}\n`;
-    });
-  } else txt += `(keine Auswahl)\n`;
-  txt += `\n── Offene Antwort ──\n${d.openAnswer || "(keine Antwort)"}\n`;
-  return txt;
-}
 
 function buildAnswersTextForAi(d: ResultsData) {
   let s = "";
@@ -168,9 +143,6 @@ function MarkdownView({ text }: { text: string }) {
 }
 
 export function ResultsPanel({ data }: { data: ResultsData }) {
-  const [copied, setCopied] = useState(false);
-  const questionnaireText = useMemo(() => buildQuestionnaireCopy(data), [data]);
-
   const generate = useServerFn(generateAuditEvaluation);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -218,15 +190,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const copyQuestionnaire = async () => {
-    try {
-      await navigator.clipboard.writeText(questionnaireText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* noop */
-    }
-  };
+
 
 
   return (
@@ -300,25 +264,15 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
           {aiText && <MarkdownView text={aiText} />}
         </div>
 
-        {/* Fragebogen-Kopie */}
+        {/* Drucken / PDF */}
         <div className="rounded-lg border border-border bg-muted/40 p-5">
-          <h3 className="font-semibold text-primary mb-1">📄 Ihre Fragebogen-Kopie</h3>
+          <h3 className="font-semibold text-primary mb-1">📄 Fragebogen & KI-Auswertung</h3>
           <p className="text-xs text-muted-foreground mb-3">
-            Alle Ihre Antworten zum Nachlesen, Speichern oder Ausdrucken.
+            Speichern Sie Ihre Antworten und die KI-Auswertung als PDF.
           </p>
-          <Textarea
-            readOnly
-            value={questionnaireText}
-            className="font-mono text-xs h-64 bg-background"
-          />
-          <div className="flex flex-wrap gap-2 mt-3">
-            <Button variant="outline" onClick={copyQuestionnaire}>
-              {copied ? "✅ Kopiert!" : "📋 Kopieren"}
-            </Button>
-            <Button variant="outline" onClick={() => window.print()}>
-              🖨️ Drucken / Als PDF speichern
-            </Button>
-          </div>
+          <Button variant="outline" onClick={() => window.print()}>
+            🖨️ Drucken / Als PDF speichern
+          </Button>
         </div>
 
         {data.openAnswer && (
