@@ -124,6 +124,20 @@ function AdminListPage() {
     }
   };
 
+  const handleGenerateDemo = async () => {
+    setGeneratingDemo(true);
+    setDemoError(null);
+    try {
+      await generateDemoFn({ data: undefined });
+      const data = await listSubmissions();
+      setRows(data);
+    } catch (err) {
+      setDemoError(err instanceof Error ? err.message : "Generieren fehlgeschlagen.");
+    } finally {
+      setGeneratingDemo(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center text-muted-foreground">
