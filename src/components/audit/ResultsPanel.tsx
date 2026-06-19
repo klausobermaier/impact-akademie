@@ -110,13 +110,8 @@ function ModuleOverview({ stats }: { stats: ModuleStat[] }) {
             key={s.modId}
             className="py-2.5 flex items-center justify-between gap-3 flex-wrap"
           >
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-medium text-foreground">
-                Modul {s.modId}: {s.title}
-              </div>
-              <div className="text-xs text-muted-foreground mt-0.5">
-                {s.answered}/{s.total} beantwortet · {s.redPct}% kritisch (Score 0–1) · {s.naPct}% N/A
-              </div>
+            <div className="text-sm font-medium text-foreground">
+              Modul {s.modId}: {s.title}
             </div>
             <div className="text-sm font-semibold whitespace-nowrap rounded-md border border-border bg-muted px-2.5 py-1">
               {s.avg !== null ? `Ø ${formatNum(s.avg)} / 4` : "Nicht bewertet"}
@@ -124,10 +119,6 @@ function ModuleOverview({ stats }: { stats: ModuleStat[] }) {
           </li>
         ))}
       </ul>
-      <p className="text-xs text-muted-foreground">
-        Skala 0–4: 0 = nicht vorhanden, 4 = exzellent etabliert. Module mit
-        100% N/A fließen nicht in den Gesamtdurchschnitt ein.
-      </p>
     </div>
   );
 }
