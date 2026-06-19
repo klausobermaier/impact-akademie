@@ -180,7 +180,7 @@ function AdminDetailPage() {
             </div>
           </div>
         </div>
-        <ResultsPanel data={data} />
+        <ResultsPanel data={data} showQuestionDetails />
       </main>
     </div>
   );
