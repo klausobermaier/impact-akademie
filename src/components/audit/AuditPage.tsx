@@ -198,8 +198,8 @@ export function AuditPage() {
             🎯 Die drei größten Herausforderungen
           </h3>
           <p className="text-sm text-muted-foreground mt-1 mb-4">
-            Bitte markieren Sie die <strong>drei Bereiche</strong>, in denen Sie aktuell den
-            größten Unterstützungsbedarf sehen (max. 3 Auswahlen):
+            Bitte markiere die <strong>drei Bereiche</strong>, in denen Du aktuell den
+            größten Unterstützungsbedarf siehst:
           </p>
           <ChallengeSelector selected={state.challenges} onToggle={toggleChallenge} />
 
