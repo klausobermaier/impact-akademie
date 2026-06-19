@@ -344,7 +344,21 @@ export function ResultsPanel({
             </div>
           )}
 
-          {aiText && <MarkdownView text={stripOverviewSection(toDuForm(aiText))} />}
+          {aiText && (() => {
+            const processed = stripOverviewSection(toDuForm(aiText));
+            const { before, workshop, after } = splitWorkshopBlock(processed);
+            return (
+              <>
+                {before && <MarkdownView text={before} />}
+                {workshop && (
+                  <div className="rounded-lg border-2 border-primary/40 bg-primary/10 p-5 my-5 shadow-sm">
+                    <MarkdownView text={workshop} />
+                  </div>
+                )}
+                {after && <MarkdownView text={after} />}
+              </>
+            );
+          })()}
 
           <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-primary/10">
             Diese Auswertung wurde mit Hilfe einer KI erstellt.
