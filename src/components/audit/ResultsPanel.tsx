@@ -223,7 +223,7 @@ export function ResultsPanel({
             </div>
           )}
 
-          {aiText && <MarkdownView text={aiText} />}
+          {aiText && <MarkdownView text={toDuForm(aiText)} />}
 
           <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-primary/10">
             Diese Auswertung wurde mit Hilfe einer KI erstellt.
