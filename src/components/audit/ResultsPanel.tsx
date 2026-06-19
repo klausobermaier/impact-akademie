@@ -1,7 +1,6 @@
 import { useEffect, useState, type ReactElement } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { MODULES } from "./data";
 import type { AnswerValue } from "./data";
 import { generateAuditEvaluation } from "@/lib/audit-ai.functions";
@@ -173,7 +172,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
     } catch (err) {
       console.error(err);
       setAiError(
-        "Die KI-Auswertung konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+        "Die KI-Auswertung konnte nicht erstellt werden. Bitte versuche es erneut.",
       );
     } finally {
       setAiLoading(false);
@@ -190,9 +189,6 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-
-
-
   return (
     <section className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
       <header className="bg-primary text-primary-foreground px-6 py-5">
@@ -203,45 +199,10 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
       </header>
 
       <div className="p-6 space-y-6">
-        <div className="space-y-3">
-          {data.moduleStats.map((s) => {
-            const badgeCls =
-              s.avg === null
-                ? "bg-muted text-foreground"
-                : s.avg < 1.5
-                  ? "bg-scale-0-soft text-scale-0"
-                  : s.avg < 2.5
-                    ? "bg-scale-2-soft text-scale-2"
-                    : "bg-scale-4-soft text-scale-4";
-            return (
-              <div key={s.modId} className="rounded-lg border border-border p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="font-semibold text-sm">
-                    Modul {s.modId}: {s.title}
-                  </div>
-                  <span className={cn("text-sm font-bold px-2.5 py-0.5 rounded-full", badgeCls)}>
-                    Ø {s.avg !== null ? s.avg : "N/A"}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  <span>📊 {s.answered}/{s.total} beantwortet</span>
-                  <span>🔴 {s.redPct}% kritisch (0–1)</span>
-                  <span>⬜ {s.naPct}% N/A</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* KI-Kurzauswertung */}
+        {/* KI-Auswertung */}
         <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-semibold text-primary">🤖 Ihre persönliche KI-Kurzauswertung</h3>
-            {!aiLoading && aiText && (
-              <Button variant="outline" size="sm" onClick={runEvaluation}>
-                Neu generieren
-              </Button>
-            )}
+            <h3 className="font-semibold text-primary">🤖 Deine persönliche Auswertung</h3>
           </div>
 
           {aiLoading && (
@@ -253,22 +214,21 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
           {aiError && (
             <div className="text-sm text-destructive">
               {aiError}
-              <div className="mt-2">
-                <Button variant="outline" size="sm" onClick={runEvaluation}>
-                  Erneut versuchen
-                </Button>
-              </div>
             </div>
           )}
 
           {aiText && <MarkdownView text={aiText} />}
+
+          <p className="text-xs text-muted-foreground mt-4 pt-3 border-t border-primary/10">
+            Diese Auswertung wurde mit Hilfe einer KI erstellt.
+          </p>
         </div>
 
         {/* Drucken / PDF */}
         <div className="rounded-lg border border-border bg-muted/40 p-5">
           <h3 className="font-semibold text-primary mb-1">📄 Fragebogen & KI-Auswertung</h3>
           <p className="text-xs text-muted-foreground mb-3">
-            Speichern Sie Ihre Antworten und die KI-Auswertung als PDF.
+            Speichere deine Antworten und die KI-Auswertung als PDF.
           </p>
           <Button variant="outline" onClick={() => window.print()}>
             🖨️ Drucken / Als PDF speichern
@@ -277,7 +237,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
 
         {data.openAnswer && (
           <div className="rounded-lg border border-border p-4">
-            <h4 className="font-semibold text-sm text-primary mb-2">💬 Ihre offene Antwort</h4>
+            <h4 className="font-semibold text-sm text-primary mb-2">💬 Deine offene Antwort</h4>
             <p className="text-sm whitespace-pre-wrap text-foreground/90">{data.openAnswer}</p>
           </div>
         )}
