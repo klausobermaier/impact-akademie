@@ -31,6 +31,10 @@ function AdminListPage() {
   const navigate = useNavigate();
   const createUserFn = useServerFn(createAppUser);
   const deleteSubmissionFn = useServerFn(deleteSubmission);
+  const generateDemoFn = useServerFn(generateDemoSubmission);
+
+  const [generatingDemo, setGeneratingDemo] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
