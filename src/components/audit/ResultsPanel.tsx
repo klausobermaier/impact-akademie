@@ -5,6 +5,39 @@ import { MODULES, SCALE_LABELS } from "./data";
 import type { AnswerValue } from "./data";
 import { generateAuditEvaluation } from "@/lib/audit-ai.functions";
 
+// Normalisiert alte, in „Sie"-Form gespeicherte KI-Auswertungen auf „Du"-Form.
+function toDuForm(text: string): string {
+  const rules: Array<[RegExp, string]> = [
+    [/\bIhrer aktuellen Situation\b/g, "Deiner aktuellen Situation"],
+    [/\bIhre Ergebnisse\b/g, "Deine Ergebnisse"],
+    [/\bIhre größten Stärken\b/g, "Deine größten Stärken"],
+    [/\bIhre größten Entwicklungsfelder\b/g, "Deine größten Entwicklungsfelder"],
+    [/\bIhres Unternehmens\b/g, "Deines Unternehmens"],
+    [/\bIhrem Unternehmen\b/g, "Deinem Unternehmen"],
+    [/\bIhr Unternehmen\b/g, "Dein Unternehmen"],
+    [/\bIhre\b/g, "Deine"],
+    [/\bIhrer\b/g, "Deiner"],
+    [/\bIhren\b/g, "Deinen"],
+    [/\bIhrem\b/g, "Deinem"],
+    [/\bIhres\b/g, "Deines"],
+    [/\bIhr\b/g, "Dein"],
+    [/\bIhnen\b/g, "Dir"],
+    [/\bSie sich\b/g, "Du Dich"],
+    [/\bhaben Sie\b/g, "hast Du"],
+    [/\bsind Sie\b/g, "bist Du"],
+    [/\bkönnen Sie\b/g, "kannst Du"],
+    [/\bsollten Sie\b/g, "solltest Du"],
+    [/\bwollen Sie\b/g, "willst Du"],
+    [/\bmüssen Sie\b/g, "musst Du"],
+    [/\bwerden Sie\b/g, "wirst Du"],
+    [/\bdürfen Sie\b/g, "darfst Du"],
+    [/\bSie\b/g, "Du"],
+  ];
+  let out = text;
+  for (const [re, rep] of rules) out = out.replace(re, rep);
+  return out;
+}
+
 export type ModuleStat = {
   modId: number;
   title: string;
