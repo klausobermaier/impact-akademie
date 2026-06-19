@@ -168,9 +168,6 @@ function MarkdownView({ text }: { text: string }) {
 }
 
 export function ResultsPanel({ data }: { data: ResultsData }) {
-  const [copied, setCopied] = useState(false);
-  const questionnaireText = useMemo(() => buildQuestionnaireCopy(data), [data]);
-
   const generate = useServerFn(generateAuditEvaluation);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
@@ -218,15 +215,7 @@ export function ResultsPanel({ data }: { data: ResultsData }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  const copyQuestionnaire = async () => {
-    try {
-      await navigator.clipboard.writeText(questionnaireText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* noop */
-    }
-  };
+
 
 
   return (
