@@ -207,7 +207,7 @@ export function AuditPage() {
 
           <h3 className="text-base font-semibold text-primary">💬 Offene Frage</h3>
           <p className="text-sm text-muted-foreground mt-1 mb-3">
-            Wenn Sie im Workshop nur <strong>drei Themen intensiv bearbeiten</strong> könnten:
+            Wenn Du im Workshop&nbsp;<strong>drei Themen intensiv bearbeiten</strong> könnten:
             Welche wären das und warum?
           </p>
           <Textarea
