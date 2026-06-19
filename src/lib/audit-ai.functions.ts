@@ -25,7 +25,7 @@ type EvalInput = {
   answersText: string;
 };
 
-const SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater der Impact Akademie.
+export const AUDIT_EVAL_SYSTEM_PROMPT = `Du bist ein erfahrener Startup-, Marketing- und Vertriebsberater der Impact Akademie.
 
 Deine Aufgabe ist es, die Antworten eines Teilnehmers der „Impact Akademie" auszuwerten und ihm eine kurze, praxisnahe Rückmeldung zu geben.
 
@@ -78,7 +78,7 @@ Eine konkrete Handlungsempfehlung, die Du innerhalb der nächsten sieben Tage um
 
 MAXIMALE LÄNGE DER GESAMTEN AUSWERTUNG: 800 Wörter.`;
 
-function buildUserPrompt(d: EvalInput): string {
+export function buildAuditEvalUserPrompt(d: EvalInput): string {
   let s = `TEILNEHMER\n`;
   s += `Name: ${d.name}\n`;
   s += `Unternehmen: ${d.company || "–"}\n`;
@@ -103,8 +103,8 @@ export const generateAuditEvaluation = createServerFn({ method: "POST" })
     const gateway = createLovableAiGatewayProvider(key);
     const { text } = await generateText({
       model: gateway("google/gemini-3-flash-preview"),
-      system: SYSTEM_PROMPT,
-      prompt: buildUserPrompt(data),
+      system: AUDIT_EVAL_SYSTEM_PROMPT,
+      prompt: buildAuditEvalUserPrompt(data),
     });
 
     // Persist to submission if submissionId was provided

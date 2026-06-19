@@ -14,6 +14,7 @@ import {
   createAppUser,
   deleteSubmission,
 } from "@/lib/admin-users.functions";
+import { generateDemoSubmission } from "@/lib/admin-demo.functions";
 
 export const Route = createFileRoute("/admin/")({
   ssr: false,
@@ -30,6 +31,10 @@ function AdminListPage() {
   const navigate = useNavigate();
   const createUserFn = useServerFn(createAppUser);
   const deleteSubmissionFn = useServerFn(deleteSubmission);
+  const generateDemoFn = useServerFn(generateDemoSubmission);
+
+  const [generatingDemo, setGeneratingDemo] = useState(false);
+  const [demoError, setDemoError] = useState<string | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -116,6 +121,20 @@ function AdminListPage() {
       setRows((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
       alert(err instanceof Error ? err.message : "Löschen fehlgeschlagen.");
+    }
+  };
+
+  const handleGenerateDemo = async () => {
+    setGeneratingDemo(true);
+    setDemoError(null);
+    try {
+      await generateDemoFn();
+      const data = await listSubmissions();
+      setRows(data);
+    } catch (err) {
+      setDemoError(err instanceof Error ? err.message : "Generieren fehlgeschlagen.");
+    } finally {
+      setGeneratingDemo(false);
     }
   };
 
@@ -277,6 +296,19 @@ function AdminListPage() {
               </p>
             </div>
           )}
+        </section>
+
+        <section className="rounded-xl border border-dashed border-border bg-muted/20 p-5 flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 className="text-sm font-semibold">Test-Fragebogen generieren</h2>
+            <p className="text-xs text-muted-foreground">
+              Erstellt einen ausgefüllten Demo-Fragebogen mit zufälligem Profil und automatischer KI-Auswertung.
+            </p>
+            {demoError && <p className="text-xs text-destructive mt-1">{demoError}</p>}
+          </div>
+          <Button size="sm" onClick={handleGenerateDemo} disabled={generatingDemo}>
+            {generatingDemo ? "Wird generiert …" : "🎲 Demo-Fragebogen erzeugen"}
+          </Button>
         </section>
 
         {error && (
