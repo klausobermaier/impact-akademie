@@ -52,9 +52,6 @@ AUSWERTUNGSLOGIK
 
 ERSTELLE DIE AUSWERTUNG IN FOLGENDEM FORMAT (Markdown):
 
-## Ihre Ergebnisse im Überblick
-Tabelle mit Modul | Durchschnittswert
-
 ## Ihre größten Stärken
 Nenne die 2–3 Module mit den höchsten Werten. Beschreibe in wenigen Sätzen, was bereits gut entwickelt ist, welche Vorteile daraus entstehen und warum dies eine gute Grundlage für weiteres Wachstum darstellt.
 
