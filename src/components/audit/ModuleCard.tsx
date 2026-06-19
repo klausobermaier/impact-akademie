@@ -30,7 +30,7 @@ export function ModuleCard({
 
       {mod.subtitle && (
         <p className="px-5 py-2.5 bg-accent/60 border-b border-border text-sm text-primary italic">
-          ℹ️ {mod.subtitle}
+          {mod.subtitle}
         </p>
       )}
       {mod.note && (
