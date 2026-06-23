@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Bitte fülle dieses Self-Assessment bis spätestens bis zum 30. Juni 2026 aus. Die Inhalte des Workshops basieren dann exakt auf Euren Herausforderungen, die sich aus dem Self-Assement ergeben.",
+          "Bitte fülle dieses Self-Assessment bis spätestens zum 30. Juni 2026 aus. Die Inhalte des Workshops basieren dann exakt auf Euren Herausforderungen, die sich aus dem Self-Assement ergeben.",
       },
       { property: "og:title", content: "Impact Akademie: Marketing & Vertrieb" },
       {
