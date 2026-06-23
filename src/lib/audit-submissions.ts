@@ -41,7 +41,30 @@ export type SubmissionRow = {
 };
 
 export async function submitAudit(payload: SubmissionPayload) {
-  return await submitAuditFn({ data: payload });
+  try {
+    return await submitAuditFn({ data: payload });
+  } catch (serverFnError) {
+    console.warn(
+      "Serverseitiges Speichern fehlgeschlagen, versuche direkte Übermittlung.",
+      serverFnError,
+    );
+
+    const { error } = await supabase.from("audit_submissions").insert({
+      name: payload.name.trim(),
+      company: payload.company.trim() || null,
+      industry: payload.industry.trim() || null,
+      stage: payload.stage || null,
+      answers: payload.answers,
+      challenges: payload.challenges,
+      open_answer: payload.openAnswer.trim() || null,
+      module_stats: payload.moduleStats,
+      answered_count: payload.answeredCount,
+      total_questions: payload.totalQuestions,
+    });
+
+    if (error) throw error;
+    return { id: undefined };
+  }
 }
 
 export async function listSubmissions(): Promise<SubmissionRow[]> {
