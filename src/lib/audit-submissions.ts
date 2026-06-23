@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { AnswerValue } from "@/components/audit/data";
+import { submitAuditFn } from "@/lib/audit-submit.functions";
 
 export type SubmissionPayload = {
   name: string;
@@ -40,24 +41,7 @@ export type SubmissionRow = {
 };
 
 export async function submitAudit(payload: SubmissionPayload) {
-  const { data, error } = await supabase
-    .from("audit_submissions")
-    .insert({
-      name: payload.name.trim(),
-      company: payload.company.trim() || null,
-      industry: payload.industry.trim() || null,
-      stage: payload.stage || null,
-      answers: payload.answers,
-      challenges: payload.challenges,
-      open_answer: payload.openAnswer.trim() || null,
-      module_stats: payload.moduleStats,
-      answered_count: payload.answeredCount,
-      total_questions: payload.totalQuestions,
-    })
-    .select("id")
-    .single();
-  if (error) throw error;
-  return data;
+  return await submitAuditFn({ data: payload });
 }
 
 export async function listSubmissions(): Promise<SubmissionRow[]> {
