@@ -29,7 +29,7 @@ function Landing() {
             Selbstcheck · Workshop-Vorbereitung
           </p>
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
-            Impact Akademie: Marketing & Vertrieb
+            Impact Akademie:&nbsp;<br />Marketing & Vertrieb
           </h1>
           <p className="mt-5 text-base sm:text-lg opacity-85 max-w-2xl mx-auto">
             Bitte fülle dieses Self-Assessment bis spätestens zum <span className="text-red-600 font-bold">30. Juni 2026</span> aus.<br />

@@ -104,7 +104,7 @@ export function AuditPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-primary text-primary-foreground px-6 py-10 text-center">
-        <h1 className="text-2xl sm:text-3xl font-bold">📊 Impact Akademie: Marketing & Vertrieb</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold">📊 Impact Akademie:&nbsp;<br />Marketing & Vertrieb</h1>
         <p className="mt-2 text-sm opacity-80 max-w-xl mx-auto">
           Bitte fülle dieses Self-Assessment bis spätestens zum <span className="text-red-600 font-bold">30. Juni 2026</span> aus.<br />
           Die Inhalte des Workshops basieren dann exakt auf Euren Herausforderungen, die sich aus dem Self-Assement ergeben.
