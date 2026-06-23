@@ -32,7 +32,7 @@ function Landing() {
             Impact Akademie: Marketing & Vertrieb
           </h1>
           <p className="mt-5 text-base sm:text-lg opacity-85 max-w-2xl mx-auto">
-            Bitte fülle dieses Self-Assessment bis spätestens bis zum 30. Juni 2026 aus.<br />
+            Bitte fülle dieses Self-Assessment bis spätestens zum 30. Juni 2026 aus.<br />
             Die Inhalte des Workshops basieren dann exakt auf Euren Herausforderungen, die sich aus dem Self-Assement ergeben.
           </p>
           <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
