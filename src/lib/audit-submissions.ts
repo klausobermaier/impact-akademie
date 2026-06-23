@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { AnswerValue } from "@/components/audit/data";
 import { submitAuditFn } from "@/lib/audit-submit.functions";
+import type { Json } from "@/integrations/supabase/types";
 
 export type SubmissionPayload = {
   name: string;
@@ -49,21 +50,23 @@ export async function submitAudit(payload: SubmissionPayload) {
       serverFnError,
     );
 
+    const fallbackId = crypto.randomUUID();
     const { error } = await supabase.from("audit_submissions").insert({
+      id: fallbackId,
       name: payload.name.trim(),
       company: payload.company.trim() || null,
       industry: payload.industry.trim() || null,
       stage: payload.stage || null,
-      answers: payload.answers,
+      answers: payload.answers as unknown as Json,
       challenges: payload.challenges,
       open_answer: payload.openAnswer.trim() || null,
-      module_stats: payload.moduleStats,
+      module_stats: payload.moduleStats as unknown as Json,
       answered_count: payload.answeredCount,
       total_questions: payload.totalQuestions,
     });
 
     if (error) throw error;
-    return { id: undefined };
+    return { id: fallbackId };
   }
 }
 
