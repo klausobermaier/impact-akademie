@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import zamwirkenLogo from "@/assets/zamwirken.png.asset.json";
+import zamstartenLogo from "@/assets/zamstarten.jpg.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
