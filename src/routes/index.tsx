@@ -70,7 +70,7 @@ function Landing() {
                 <img
                   src={zamstartenLogo.url}
                   alt="Zamstarten"
-                  className="max-h-14 w-auto object-contain"
+                  className="max-h-16 w-auto object-contain"
                 />
               </div>
             </div>
