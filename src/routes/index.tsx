@@ -56,7 +56,7 @@ function Landing() {
 
           <div className="mt-14 pt-8 border-t border-primary-foreground/15">
             <p className="text-[11px] uppercase tracking-[0.2em] opacity-60 mb-5">
-              Eine Initiative von
+              DIE IMPACT AKADEMIE IST EINE KOOPERATION VON:
             </p>
             <div className="flex items-center justify-center gap-4 sm:gap-6 flex-wrap">
               <div className="bg-background rounded-xl px-6 py-4 shadow-lg flex items-center justify-center h-20 w-44 sm:w-52">
