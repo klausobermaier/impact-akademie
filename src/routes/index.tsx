@@ -26,8 +26,8 @@ export const Route = createFileRoute("/")({
 function Landing() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="bg-primary text-primary-foreground">
-        <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+      <header className="bg-primary text-primary-foreground flex flex-col min-h-[80vh]">
+        <div className="max-w-4xl mx-auto px-6 pt-20 pb-6 text-center flex flex-col flex-1">
           <p className="text-xs uppercase tracking-widest opacity-70 mb-4">
             Selbstcheck · Workshop-Vorbereitung
           </p>
@@ -54,7 +54,7 @@ function Landing() {
             </Link>
           </div>
 
-          <div className="mt-14 pt-8 border-t border-primary-foreground/15">
+          <div className="mt-auto pt-8 border-t border-primary-foreground/15">
             <p className="text-[11px] uppercase tracking-[0.2em] opacity-60 mb-5">
               DIE IMPACT AKADEMIE IST EINE KOOPERATION VON:
             </p>
