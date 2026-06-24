@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import zamwirkenLogo from "@/assets/zamwirken.png.asset.json";
+import zamstartenLogo from "@/assets/zamstarten.jpg.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -28,6 +31,7 @@ function Landing() {
           <p className="text-xs uppercase tracking-widest opacity-70 mb-4">
             Selbstcheck · Workshop-Vorbereitung
           </p>
+
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
             Impact Akademie:&nbsp;<br />Marketing & Vertrieb
           </h1>
@@ -48,6 +52,28 @@ function Landing() {
             >
               Admin-Login
             </Link>
+          </div>
+
+          <div className="mt-14 pt-8 border-t border-primary-foreground/15">
+            <p className="text-[11px] uppercase tracking-[0.2em] opacity-60 mb-5">
+              Eine Initiative von
+            </p>
+            <div className="flex items-center justify-center gap-4 sm:gap-6 flex-wrap">
+              <div className="bg-background rounded-xl px-6 py-4 shadow-lg flex items-center justify-center h-20 w-44 sm:w-52">
+                <img
+                  src={zamwirkenLogo.url}
+                  alt="Zamwirken"
+                  className="max-h-10 w-auto object-contain"
+                />
+              </div>
+              <div className="bg-background rounded-xl px-6 py-4 shadow-lg flex items-center justify-center h-20 w-44 sm:w-52">
+                <img
+                  src={zamstartenLogo.url}
+                  alt="Zamstarten"
+                  className="max-h-14 w-auto object-contain"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </header>
