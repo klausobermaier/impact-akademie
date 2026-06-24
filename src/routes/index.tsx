@@ -81,8 +81,9 @@ function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        Impact Akademie
+      <footer className="border-t border-border py-6 text-center text-xs text-muted-foreground whitespace-pre-line">
+        ©2026 Impact Akademie
+        <div className="mt-1">Gründerzentrum Grafing | Marktplatz 4 | 85567 Grafing</div>
       </footer>
     </div>
   );
