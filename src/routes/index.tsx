@@ -31,6 +31,7 @@ function Landing() {
           <p className="text-xs uppercase tracking-widest opacity-70 mb-4">
             Selbstcheck · Workshop-Vorbereitung
           </p>
+
           <h1 className="text-3xl sm:text-5xl font-bold leading-tight">
             Impact Akademie:&nbsp;<br />Marketing & Vertrieb
           </h1>
