@@ -120,6 +120,27 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    const handler = () => {
+      try {
+        const stay = window.localStorage.getItem("impact-akademie:stay-logged-in");
+        if (stay === "false") {
+          // Clear all Supabase auth tokens so the next visit requires a fresh login.
+          for (let i = window.localStorage.length - 1; i >= 0; i--) {
+            const key = window.localStorage.key(i);
+            if (key && key.startsWith("sb-") && key.endsWith("-auth-token")) {
+              window.localStorage.removeItem(key);
+            }
+          }
+        }
+      } catch {
+        // ignore storage errors
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}

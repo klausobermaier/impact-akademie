@@ -16,10 +16,17 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const STAY_LOGGED_IN_KEY = "impact-akademie:stay-logged-in";
+
 function AuthPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [stayLoggedIn, setStayLoggedIn] = useState(() => {
+    if (typeof window === "undefined") return true;
+    const stored = window.localStorage.getItem(STAY_LOGGED_IN_KEY);
+    return stored === null ? true : stored === "true";
+  });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -30,6 +37,7 @@ function AuthPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      window.localStorage.setItem(STAY_LOGGED_IN_KEY, stayLoggedIn ? "true" : "false");
       navigate({ to: "/admin" });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler");
@@ -69,6 +77,15 @@ function AuthPage() {
               className="mt-1.5"
             />
           </div>
+          <label className="flex items-center gap-2 text-sm text-muted-foreground select-none cursor-pointer">
+            <input
+              type="checkbox"
+              checked={stayLoggedIn}
+              onChange={(e) => setStayLoggedIn(e.target.checked)}
+              className="h-4 w-4 rounded border-border accent-primary"
+            />
+            Eingeloggt bleiben
+          </label>
           {error && <p className="text-sm text-destructive">{error}</p>}
           <Button type="submit" className="w-full" disabled={busy}>
             {busy ? "Bitte warten …" : "Anmelden"}
