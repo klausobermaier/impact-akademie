@@ -137,11 +137,13 @@ function buildAnswersText(answers: Record<string, AnswerValue>): string {
 export const generateDemoSubmission = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data: isAdmin, error: roleErr } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleErr || !isAdmin) throw new Error("Forbidden");
+    const { data: roleRow, error: roleErr } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleErr || !roleRow) throw new Error("Forbidden");
 
     const firstName = pick(FIRST_NAMES);
     const lastName = pick(LAST_NAMES);

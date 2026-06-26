@@ -202,11 +202,13 @@ export const generateGroupAnalysis = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({}).parse(input ?? {}))
   .handler(async ({ context }) => {
     // Admin gate
-    const { data: isAdmin, error: roleErr } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    if (roleErr || !isAdmin) throw new Error("Forbidden");
+    const { data: roleRow, error: roleErr } = await context.supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", context.userId)
+      .eq("role", "admin")
+      .maybeSingle();
+    if (roleErr || !roleRow) throw new Error("Forbidden");
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin
